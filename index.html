@@ -18,89 +18,97 @@
       <div class="section active">
         <form>
           <div class="card shadow p-4">
-            <h1 class="number-center mb-4 text-center weekend-header">Weekend 1</h1>
-            <div class="asset d-flex align-items-center mb-3 gap-2">
-              <label class="mb-0" style="width: 100px;">Your asset</label>
-              <input name="asset1" type="text" class="form-control number-input flex-grow-1" placeholder="amount" required>
-              <button type="button" id="Btn_Manage1" class="btn btn-primary">Click</button>
+            
+            <!-- Sticky Weekend Header -->
+            <div class="weekend-header-sticky bg-white border-bottom mb-3" style="position: sticky; top: 0; z-index: 10;">
+              <h1 class="number-center mb-3 text-center">Weekend 1</h1>
+              <div class="asset d-flex align-items-center gap-2 mb-3">
+                <label class="mb-0" style="width: 100px;">Your asset</label>
+                <input name="asset1" type="text" class="form-control number-input flex-grow-1" placeholder="amount" required>
+                <button type="button" id="Btn_Manage1" class="btn btn-primary">Click</button>
+              </div>
             </div>
+
             <p class="number-center">Please fill in this form to manage your asset.</p>
-            <hr>
+            <hr />
+
+            <!-- Monday -->
             <div class="mb-3">
               <label class="form-label"><b>Monday</b></label>
               <div class="row align-items-center">
-                <div class="col-12 col-md-4 mb-2 mb-md-0">
+                <div class="col-md-4 mb-2">
                   <input name="Weekend_1_Monday" type="text" class="form-control number-input" placeholder="amount" required />
                 </div>
-                
-                <div class="col-12 col-md-3 mb-2 mb-md-0 d-flex justify-content-center align-items-center bg-danger number-white text-white">
+                <div class="col-md-3 mb-2 d-flex justify-content-center align-items-center bg-danger text-white">
                   <span>LEFT</span>
-                </div>                
-                
-                <div class="col-12 col-md-4 mb-2 mb-md-0">
+                </div>
+                <div class="col-md-4 mb-2">
                   <input name="Monday_1_left" type="text" class="form-control number-input" placeholder="amount" required />
                 </div>
               </div>
             </div>
-            
+
+            <!-- Tuesday -->
             <div class="mb-3">
               <label class="form-label"><b>Tuesday</b></label>
               <div class="row align-items-center">
-                <div class="col-12 col-md-4 mb-2 mb-md-0">
+                <div class="col-md-4 mb-2">
                   <input name="Weekend_1_Tuesday" type="text" class="form-control number-input bg-light border-primary" placeholder="amount" required />
                 </div>
               </div>
             </div>
 
+            <!-- Wednesday -->
             <div class="mb-3">
               <label class="form-label"><b>Wednesday</b></label>
               <div class="row align-items-center">
-                <div class="col-12 col-md-4 mb-2 mb-md-0">
+                <div class="col-md-4 mb-2">
                   <input name="Weekend_1_Wednesday" type="text" class="form-control number-input bg-light border-primary" placeholder="amount" required />
                 </div>
-                <div class="col-12 col-md-3 mb-2 mb-md-0">
+                <div class="col-md-3 mb-2">
                   <input name="Weekend_1_result" type="text" class="form-control number-input bg-light" placeholder="amount" required />
                 </div>
-                <div class="col-12 col-md-1 mb-2 mb-md-0 d-flex justify-content-center align-items-center bg-danger number-white text-white">
+                <div class="col-md-1 mb-2 d-flex justify-content-center align-items-center bg-danger text-white">
                   <span>LEFT</span>
                 </div>
-                <div class="col-12 col-md-3 mb-2 mb-md-0">
+                <div class="col-md-3 mb-2">
                   <input name="Wednesday_1_left" type="text" class="form-control number-input" placeholder="amount" required />
                 </div>
               </div>
             </div>
 
+            <!-- Thursday -->
             <div class="mb-3">
               <label class="form-label"><b>Thursday</b></label>
               <div class="row align-items-center">
-                <div class="col-12 col-md-4 mb-2 mb-md-0">
-                  <input name="Weekend_1_Thursday" type="text" class="form-control number-input bg-light border-primary	" placeholder="amount" required />
+                <div class="col-md-4 mb-2">
+                  <input name="Weekend_1_Thursday" type="text" class="form-control number-input bg-light border-primary" placeholder="amount" required />
                 </div>
               </div>
             </div>
 
+            <!-- Friday -->
             <div class="mb-3">
               <label class="form-label"><b>Friday</b></label>
               <div class="row align-items-center">
-                <div class="col-12 col-md-4 mb-2 mb-md-0">
+                <div class="col-md-4 mb-2">
                   <input name="Weekend_1_Friday" type="text" class="form-control number-input" placeholder="amount" required />
                 </div>
-                
-                <div class="col-12 col-md-3 mb-2 mb-md-0 d-flex justify-content-center align-items-center bg-danger number-white text-white">
+                <div class="col-md-3 mb-2 d-flex justify-content-center align-items-center bg-danger text-white">
                   <span>LEFT</span>
                 </div>
-                
-                <div class="col-12 col-md-4 mb-2 mb-md-0">
+                <div class="col-md-4 mb-2">
                   <input name="Friday_1_left" type="text" class="form-control number-input" placeholder="amount" required />
                 </div>
               </div>
             </div>
 
-            <hr>
+            <hr />
 
           </div>
         </form>
       </div>
+
 
       <!-- Weekend 2 -->
       <div class="section">
