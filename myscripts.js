@@ -112,10 +112,24 @@ function calculateWeekend1() {
   const fridayLeftInput = document.querySelector('input[name="Friday_1_left"]');
   fridayLeftInput.value = fridayLeft.toLocaleString();
 
+  // Saturday
+  const saturday = parseFloat((document.querySelector('input[name="Weekend_1_Saturday"]').value || '0').replace(/,/g, '')) || 0;
+  const saturdayLeft = fridayLeft - saturday;
+  const saturdayLeftInput = document.querySelector('input[name="Saturday_1_left"]');
+  saturdayLeftInput.value = saturdayLeft.toLocaleString();
+
+  // Sunday
+  const sunday = parseFloat((document.querySelector('input[name="Weekend_1_Sunday"]').value || '0').replace(/,/g, '')) || 0;
+  const sundayLeft = saturdayLeft - sunday;
+  const sundayLeftInput = document.querySelector('input[name="Sunday_1_left"]');
+  sundayLeftInput.value = sundayLeft.toLocaleString();
+
   // Save all results to localStorage
   localStorage.setItem('weekend1_Wednesday_1', resultInput.value);
   localStorage.setItem('weekend1_Wednesday_2', wednesdayLeftInput.value);
   localStorage.setItem('weekend1_Friday_1', fridayLeftInput.value);
+  localStorage.setItem('weekend1_Saturday_1', saturdayLeftInput.value);
+  localStorage.setItem('weekend1_Sunday_1', sundayLeftInput.value);
 }
 
 document.querySelector('#Btn_Manage1').addEventListener('click', calculateWeekend1);
