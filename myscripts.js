@@ -175,11 +175,25 @@ function calculateWeekend2() {
   const fridayLeftInput = document.querySelector('input[name="Friday_2_left"]');
   fridayLeftInput.value = fridayLeft.toLocaleString();
 
+  // Saturday
+  const saturday = parseFloat((document.querySelector('input[name="Weekend_2_Saturday"]').value || '0').replace(/,/g, '')) || 0;
+  const saturdayLeft = fridayLeft - saturday;
+  const saturdayLeftInput = document.querySelector('input[name="Saturday_2_left"]');
+  saturdayLeftInput.value = saturdayLeft.toLocaleString();
+
+  // Sunday
+  const sunday = parseFloat((document.querySelector('input[name="Weekend_2_Sunday"]').value || '0').replace(/,/g, '')) || 0;
+  const sundayLeft = saturdayLeft - sunday;
+  const sundayLeftInput = document.querySelector('input[name="Sunday_2_left"]');
+  sundayLeftInput.value = sundayLeft.toLocaleString();
+
   // Save all results to localStorage
   localStorage.setItem('weekend2_Tuesday_1', tuesdayLeftInput.value);
   localStorage.setItem('weekend2_Thursday_1', resultInput.value);
   localStorage.setItem('weekend2_Thursday_2', thursdayLeftInput.value);
   localStorage.setItem('weekend2_Friday_1', fridayLeftInput.value);
+  localStorage.setItem('weekend2_Saturday_1', saturdayLeftInput.value);
+  localStorage.setItem('weekend2_Sunday_1', sundayLeftInput.value);
 }
 
 document.querySelector('#Btn_Manage2').addEventListener('click', calculateWeekend2);
@@ -234,6 +248,21 @@ function calculateWeekend3() {
   fridayLeftInput.value = fridayLeft.toLocaleString();
 
   localStorage.setItem('weekend3_Friday_1', fridayLeftInput.value);
+
+  // Saturday
+  const saturday = parseFloat((document.querySelector('input[name="Weekend_3_Saturday"]').value || '0').replace(/,/g, '')) || 0;
+  const saturdayLeft = fridayLeft - saturday;
+  const saturdayLeftInput = document.querySelector('input[name="Saturday_3_left"]');
+  saturdayLeftInput.value = saturdayLeft.toLocaleString();
+
+  // Sunday
+  const sunday = parseFloat((document.querySelector('input[name="Weekend_3_Sunday"]').value || '0').replace(/,/g, '')) || 0;
+  const sundayLeft = saturdayLeft - sunday;
+  const sundayLeftInput = document.querySelector('input[name="Sunday_3_left"]');
+  sundayLeftInput.value = sundayLeft.toLocaleString();
+
+  localStorage.setItem('weekend3_Saturday_1', saturdayLeftInput.value);
+  localStorage.setItem('weekend3_Sunday_1', sundayLeftInput.value);
 }
 
 document.querySelector('#Btn_Manage3').addEventListener('click', calculateWeekend3);
@@ -278,6 +307,21 @@ function calculateWeekend4() {
   fridayLeftInput.value = fridayLeft.toLocaleString();
 
   localStorage.setItem('weekend4_Friday_1', fridayLeftInput.value);
+
+  // Saturday
+  const saturday = parseFloat((document.querySelector('input[name="Weekend_4_Saturday"]').value || '0').replace(/,/g, '')) || 0;
+  const saturdayLeft = fridayLeft - saturday;
+  const saturdayLeftInput = document.querySelector('input[name="Saturday_4_left"]');
+  saturdayLeftInput.value = saturdayLeft.toLocaleString();
+
+  // Sunday
+  const sunday = parseFloat((document.querySelector('input[name="Weekend_4_Sunday"]').value || '0').replace(/,/g, '')) || 0;
+  const sundayLeft = saturdayLeft - sunday;
+  const sundayLeftInput = document.querySelector('input[name="Sunday_4_left"]');
+  sundayLeftInput.value = sundayLeft.toLocaleString();
+
+  localStorage.setItem('weekend4_Saturday_1', saturdayLeftInput.value);
+  localStorage.setItem('weekend4_Sunday_1', sundayLeftInput.value);
 }
 
 document.querySelector('#Btn_Manage4').addEventListener('click', calculateWeekend4);
