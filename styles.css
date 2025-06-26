@@ -49,3 +49,11 @@ border-radius: 3px 0 0 3px;
     font-size: 16px;
   }
 }
+
+/* Keep the weekend headers visible while scrolling */
+.weekend-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background-color: #fff;
+}
