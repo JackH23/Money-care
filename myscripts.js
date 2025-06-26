@@ -78,7 +78,7 @@ document.querySelectorAll('input.number-input').forEach(input => {
   });
 });
 
-document.querySelector('#Btn_Manage1').addEventListener('click', function () {
+function calculateWeekend1() {
   // Monday
   const assetInput = document.querySelector('input[name="asset1"]');
   const mondayInput = document.querySelector('input[name="Weekend_1_Monday"]');
@@ -116,9 +116,11 @@ document.querySelector('#Btn_Manage1').addEventListener('click', function () {
   localStorage.setItem('weekend1_Wednesday_1', resultInput.value);
   localStorage.setItem('weekend1_Wednesday_2', wednesdayLeftInput.value);
   localStorage.setItem('weekend1_Friday_1', fridayLeftInput.value);
-});
+}
 
-document.querySelector('#Btn_Manage2').addEventListener('click', function () {
+document.querySelector('#Btn_Manage1').addEventListener('click', calculateWeekend1);
+
+function calculateWeekend2() {
   // Monday
   const assetInput = document.querySelector('input[name="asset2"]');
   const mondayInput = document.querySelector('input[name="Weekend_2_Monday"]');
@@ -164,9 +166,11 @@ document.querySelector('#Btn_Manage2').addEventListener('click', function () {
   localStorage.setItem('weekend2_Thursday_1', resultInput.value);
   localStorage.setItem('weekend2_Thursday_2', thursdayLeftInput.value);
   localStorage.setItem('weekend2_Friday_1', fridayLeftInput.value);
-});
+}
 
-document.querySelector('#Btn_Manage3').addEventListener('click', function () {
+document.querySelector('#Btn_Manage2').addEventListener('click', calculateWeekend2);
+
+function calculateWeekend3() {
   // Monday
   const assetInput = document.querySelector('input[name="asset3"]');
   const mondayInput = document.querySelector('input[name="Weekend_3_Monday"]');
@@ -216,9 +220,11 @@ document.querySelector('#Btn_Manage3').addEventListener('click', function () {
   fridayLeftInput.value = fridayLeft.toLocaleString();
 
   localStorage.setItem('weekend3_Friday_1', fridayLeftInput.value);
-});
+}
 
-document.querySelector('#Btn_Manage4').addEventListener('click', function () {
+document.querySelector('#Btn_Manage3').addEventListener('click', calculateWeekend3);
+
+function calculateWeekend4() {
   // Monday
   const assetInput = document.querySelector('input[name="asset4"]');
   const mondayInput = document.querySelector('input[name="Weekend_4_Monday"]');
@@ -258,4 +264,22 @@ document.querySelector('#Btn_Manage4').addEventListener('click', function () {
   fridayLeftInput.value = fridayLeft.toLocaleString();
 
   localStorage.setItem('weekend4_Friday_1', fridayLeftInput.value);
-})
+}
+
+document.querySelector('#Btn_Manage4').addEventListener('click', calculateWeekend4);
+
+function attachAutoCalc(sectionIndex, calcFn) {
+  const section = document.querySelectorAll('.section')[sectionIndex];
+  if (!section) return;
+  section.querySelectorAll('input.number-input').forEach(inp => {
+    inp.addEventListener('input', calcFn);
+  });
+  calcFn();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  attachAutoCalc(0, calculateWeekend1);
+  attachAutoCalc(1, calculateWeekend2);
+  attachAutoCalc(2, calculateWeekend3);
+  attachAutoCalc(3, calculateWeekend4);
+});
