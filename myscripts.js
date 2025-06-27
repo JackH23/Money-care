@@ -340,4 +340,18 @@ document.addEventListener('DOMContentLoaded', () => {
   attachAutoCalc(1, calculateWeekend2);
   attachAutoCalc(2, calculateWeekend3);
   attachAutoCalc(3, calculateWeekend4);
+
+  const handleStickyWidth = () => {
+    document.querySelectorAll('.weekend-header-sticky').forEach(header => {
+      const rect = header.getBoundingClientRect();
+      if (rect.top <= 0 && rect.bottom > 0) {
+        header.classList.add('is-stuck');
+      } else {
+        header.classList.remove('is-stuck');
+      }
+    });
+  };
+
+  window.addEventListener('scroll', handleStickyWidth);
+  handleStickyWidth();
 });
