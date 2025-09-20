@@ -15,6 +15,55 @@ document.querySelectorAll(".number-input").forEach((input) => {
 const sections = document.querySelectorAll(".section");
 let currentIndex = 0;
 
+const weekend1Days = [
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+  "Sunday",
+];
+
+function parseNumeric(value) {
+  if (typeof value !== "string") {
+    value = String(value ?? "");
+  }
+  const cleaned = value.replace(/,/g, "").trim();
+  if (cleaned === "") {
+    return 0;
+  }
+  const parsed = parseFloat(cleaned);
+  return Number.isNaN(parsed) ? 0 : parsed;
+}
+
+function getWeekend1StorageKey(day, type) {
+  const normalized = String(type || "").toLowerCase();
+  if (normalized === "add") {
+    return day === "Monday" ? "Monday_Add" : `Weekend1_${day}_Add`;
+  }
+  if (normalized === "paid") {
+    return day === "Monday" ? "Monday_Paid" : `Weekend1_${day}_Paid`;
+  }
+  if (normalized === "remaining") {
+    return day === "Monday" ? "Monday_1_addTotal" : `Weekend1_${day}_Remaining`;
+  }
+  return `Weekend1_${day}_${type}`;
+}
+
+function loadStoredArray(key) {
+  try {
+    const raw = localStorage.getItem(key);
+    if (!raw) {
+      return [];
+    }
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch (err) {
+    return [];
+  }
+}
+
 function showSection(index) {
   sections.forEach((section, i) => {
     section.classList.toggle("active", i === index);
@@ -78,94 +127,44 @@ document.querySelectorAll("input.number-input").forEach((input) => {
   });
 });
 
-function calculateWeekend1() {
-  // Monday
+function updateWeekend1DayTotals(day) {
   const assetInput = document.querySelector('input[name="asset1"]');
-  const mondayInput = document.querySelector('input[name="Weekend_1_Monday"]');
-  const mondayLeftInput = document.querySelector('input[name="Monday_1_left"]');
+  const assetVal = parseNumeric(assetInput?.value || "0");
 
-  const assetVal =
-    parseFloat((assetInput?.value || "0").replace(/,/g, "")) || 0;
-  const mondayVal =
-    parseFloat((mondayInput?.value || "0").replace(/,/g, "")) || 0;
-  const mondayLeft = assetVal - mondayVal;
+  const paidData = loadStoredArray(getWeekend1StorageKey(day, "Paid"));
+  const addData = loadStoredArray(getWeekend1StorageKey(day, "Add"));
 
-  mondayLeftInput.value = mondayLeft.toLocaleString();
-  localStorage.setItem("Monday_1_left", mondayLeftInput.value);
-
-  // Tuesday + Wednesday + Thursday
-  const tuesday =
-    parseFloat(
-      (
-        document.querySelector('input[name="Weekend_1_Tuesday"]').value || "0"
-      ).replace(/,/g, "")
-    ) || 0;
-  const wednesday =
-    parseFloat(
-      (
-        document.querySelector('input[name="Weekend_1_Wednesday"]').value || "0"
-      ).replace(/,/g, "")
-    ) || 0;
-  const thursday =
-    parseFloat(
-      (
-        document.querySelector('input[name="Weekend_1_Thursday"]').value || "0"
-      ).replace(/,/g, "")
-    ) || 0;
-
-  const weekSpent = tuesday + wednesday + thursday;
-
-  const resultInput = document.querySelector('input[name="Weekend_1_result"]');
-  resultInput.value = weekSpent.toLocaleString();
-
-  // Wednesday LEFT
-  const wednesdayLeft = mondayLeft - weekSpent;
-  const wednesdayLeftInput = document.querySelector(
-    'input[name="Wednesday_1_left"]'
+  const paidTotal = paidData.reduce(
+    (sum, row) => sum + parseNumeric(row?.amount || 0),
+    0
   );
-  wednesdayLeftInput.value = wednesdayLeft.toLocaleString();
-
-  // Friday
-  const friday =
-    parseFloat(
-      (
-        document.querySelector('input[name="Weekend_1_Friday"]').value || "0"
-      ).replace(/,/g, "")
-    ) || 0;
-  const fridayLeft = wednesdayLeft - friday;
-  const fridayLeftInput = document.querySelector('input[name="Friday_1_left"]');
-  fridayLeftInput.value = fridayLeft.toLocaleString();
-
-  // Saturday
-  const saturday =
-    parseFloat(
-      (
-        document.querySelector('input[name="Weekend_1_Saturday"]').value || "0"
-      ).replace(/,/g, "")
-    ) || 0;
-  const saturdayLeft = fridayLeft - saturday;
-  const saturdayLeftInput = document.querySelector(
-    'input[name="Saturday_1_left"]'
+  const addTotal = addData.reduce(
+    (sum, row) => sum + parseNumeric(row?.amount || 0),
+    0
   );
-  saturdayLeftInput.value = saturdayLeft.toLocaleString();
 
-  // Sunday
-  const sunday =
-    parseFloat(
-      (
-        document.querySelector('input[name="Weekend_1_Sunday"]').value || "0"
-      ).replace(/,/g, "")
-    ) || 0;
-  const sundayLeft = saturdayLeft - sunday;
-  const sundayLeftInput = document.querySelector('input[name="Sunday_1_left"]');
-  sundayLeftInput.value = sundayLeft.toLocaleString();
+  const totalInput = document.querySelector(
+    `input[name="Weekend_1_${day}"]`
+  );
+  if (totalInput) {
+    totalInput.value = paidTotal.toLocaleString();
+    localStorage.setItem(`Weekend_1_${day}`, totalInput.value);
+  }
 
-  // Save all results to localStorage
-  localStorage.setItem("weekend1_Wednesday_1", resultInput.value);
-  localStorage.setItem("weekend1_Wednesday_2", wednesdayLeftInput.value);
-  localStorage.setItem("weekend1_Friday_1", fridayLeftInput.value);
-  localStorage.setItem("weekend1_Saturday_1", saturdayLeftInput.value);
-  localStorage.setItem("weekend1_Sunday_1", sundayLeftInput.value);
+  const remaining = assetVal + addTotal - paidTotal;
+  const displayEl = document.getElementById(`${day}_1_addTotal`);
+  if (displayEl) {
+    displayEl.textContent = `Remaining: ${remaining.toLocaleString()}`;
+  }
+
+  localStorage.setItem(
+    getWeekend1StorageKey(day, "Remaining"),
+    remaining
+  );
+}
+
+function calculateWeekend1() {
+  weekend1Days.forEach(updateWeekend1DayTotals);
 }
 
 document
@@ -522,202 +521,232 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 document.addEventListener("DOMContentLoaded", function () {
-  const btnMonday = document.getElementById("showMondaySection");
-  const mondayModal = new bootstrap.Modal(
-    document.getElementById("mondayModal")
+  const modalEl = document.getElementById("dayModal");
+  const dayButtons = document.querySelectorAll(
+    ".day-modal-trigger[data-day]"
   );
+  const assetInput = document.querySelector('input[name="asset1"]');
 
-  btnMonday.addEventListener("click", function () {
-    mondayModal.show();
+  weekend1Days.forEach((day) => {
+    const savedRemain = localStorage.getItem(
+      getWeekend1StorageKey(day, "Remaining")
+    );
+    const displayEl = document.getElementById(`${day}_1_addTotal`);
+    if (savedRemain !== null && displayEl) {
+      const parsed = parseNumeric(savedRemain);
+      displayEl.textContent = `Remaining: ${parsed.toLocaleString()}`;
+    }
   });
-});
 
-document.addEventListener("DOMContentLoaded", function () {
-  function setupPersistentInputs(containerId, prefix, detailPlaceholder) {
-    const container = document.getElementById(containerId);
-    if (!container) return;
+  const refreshAllDays = () => {
+    weekend1Days.forEach(updateWeekend1DayTotals);
+  };
 
-    function formatDateTimeDisplay(input) {
-      const date = typeof input === "string" ? new Date(input) : input;
-      if (!(date instanceof Date) || Number.isNaN(date.getTime())) {
-        return "";
-      }
+  if (assetInput) {
+    assetInput.addEventListener("input", refreshAllDays);
+  }
 
-      const day = String(date.getDate()).padStart(2, "0");
-      const month = String(date.getMonth() + 1).padStart(2, "0");
-      const year = date.getFullYear();
-      const hours = String(date.getHours()).padStart(2, "0");
-      const minutes = String(date.getMinutes()).padStart(2, "0");
-      return `${day}/${month}/${year} ${hours}:${minutes}`;
+  if (!modalEl) {
+    refreshAllDays();
+    return;
+  }
+
+  const dayModal = new bootstrap.Modal(modalEl);
+  const dayModalLabel = modalEl.querySelector("#dayModalLabel");
+  const dayModalDescription = modalEl.querySelector("#dayModalDescription");
+  const addContainer = modalEl.querySelector("#dayAddInputs");
+  const paidContainer = modalEl.querySelector("#dayPaidInputs");
+
+  const detailPlaceholders = {
+    Add: "Detail (e.g. Salary, Bonus)",
+    Paid: "Detail (e.g. Rent, Food)",
+  };
+
+  let currentDay = null;
+
+  function formatDateTimeDisplay(input) {
+    const date = typeof input === "string" ? new Date(input) : input;
+    if (!(date instanceof Date) || Number.isNaN(date.getTime())) {
+      return "";
     }
 
-    function resolveTimestamp(rowData = {}) {
-      if (rowData.timestamp) {
-        const parsed = new Date(rowData.timestamp);
-        if (!Number.isNaN(parsed.getTime())) {
-          return parsed.toISOString();
-        }
-      }
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = date.getFullYear();
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
+    return `${day}/${month}/${year} ${hours}:${minutes}`;
+  }
 
-      if (rowData.date || rowData.time) {
-        const isoSource = rowData.date
-          ? `${rowData.date}T${rowData.time || "00:00"}`
-          : `${new Date().toISOString().split("T")[0]}T${rowData.time}`;
-        const parsed = new Date(isoSource);
-        if (!Number.isNaN(parsed.getTime())) {
-          return parsed.toISOString();
-        }
+  function resolveTimestamp(rowData = {}) {
+    if (rowData.timestamp) {
+      const parsed = new Date(rowData.timestamp);
+      if (!Number.isNaN(parsed.getTime())) {
+        return parsed.toISOString();
       }
-
-      return new Date().toISOString();
     }
 
-    function createRow(rowData = {}) {
-      const row = document.createElement("div");
-      row.className = "mb-2 border rounded p-2 entry-row";
-      row.innerHTML = `
-        <p class="current-datetime text-muted mb-2"></p>
-        <div class="input-group">
-          <input type="text" class="form-control" placeholder="${detailPlaceholder}" />
-          <input type="number" class="form-control" placeholder="Amount" />
-          <button type="button" class="btn btn-success btn-add">+</button>
-          <button type="button" class="btn btn-danger btn-remove">−</button>
-        </div>
-      `;
+    if (rowData.date || rowData.time) {
+      const isoSource = rowData.date
+        ? `${rowData.date}T${rowData.time || "00:00"}`
+        : `${new Date().toISOString().split("T")[0]}T${rowData.time}`;
+      const parsed = new Date(isoSource);
+      if (!Number.isNaN(parsed.getTime())) {
+        return parsed.toISOString();
+      }
+    }
 
-      const timestamp = resolveTimestamp(rowData);
-      const datetimeEl = row.querySelector(".current-datetime");
+    return new Date().toISOString();
+  }
+
+  function createRow(detailPlaceholder, rowData = {}) {
+    const row = document.createElement("div");
+    row.className = "mb-2 border rounded p-2 entry-row";
+    row.innerHTML = `
+      <p class="current-datetime text-muted mb-2"></p>
+      <div class="input-group">
+        <input type="text" class="form-control" placeholder="${detailPlaceholder}" />
+        <input type="number" class="form-control" placeholder="Amount" />
+        <button type="button" class="btn btn-success btn-add">+</button>
+        <button type="button" class="btn btn-danger btn-remove">−</button>
+      </div>
+    `;
+
+    const timestamp = resolveTimestamp(rowData);
+    const datetimeEl = row.querySelector(".current-datetime");
+    if (datetimeEl) {
       datetimeEl.dataset.timestamp = timestamp;
       datetimeEl.textContent = formatDateTimeDisplay(timestamp);
+    }
 
-      const detailInput = row.querySelector('input[type="text"]');
-      const amountInput = row.querySelector('input[type="number"]');
+    const detailInput = row.querySelector('input[type="text"]');
+    const amountInput = row.querySelector('input[type="number"]');
+    if (detailInput) {
       detailInput.value = rowData.detail || "";
+    }
+    if (amountInput) {
       amountInput.value = rowData.amount || "";
-
-      return row;
     }
 
-    function saveData() {
-      const data = [];
-      container.querySelectorAll(".entry-row").forEach((row) => {
-        const datetimeEl = row.querySelector(".current-datetime");
-        let timestamp = datetimeEl?.dataset.timestamp;
-        if (!timestamp) {
-          timestamp = new Date().toISOString();
-          if (datetimeEl) {
-            datetimeEl.dataset.timestamp = timestamp;
-            datetimeEl.textContent = formatDateTimeDisplay(timestamp);
-          }
-        }
+    return row;
+  }
 
-        const detail = row.querySelector('input[type="text"]').value;
-        const amount = row.querySelector('input[type="number"]').value;
-        data.push({ timestamp, detail, amount });
-      });
-
-      localStorage.setItem(prefix, JSON.stringify(data));
+  function renderContainer(container, day, type, detailPlaceholder) {
+    if (!container) return;
+    const storageKey = getWeekend1StorageKey(day, type);
+    container.dataset.storageKey = storageKey;
+    container.dataset.placeholder = detailPlaceholder;
+    container.dataset.day = day;
+    const data = loadStoredArray(storageKey);
+    container.innerHTML = "";
+    if (data.length === 0) {
+      container.appendChild(createRow(detailPlaceholder));
+    } else {
+      data.forEach((rowData) =>
+        container.appendChild(createRow(detailPlaceholder, rowData))
+      );
     }
+  }
 
-    function renderRows(data) {
-      container.innerHTML = "";
-      if (data.length === 0) {
-        container.appendChild(createRow());
-      } else {
-        data.forEach((rowData) => container.appendChild(createRow(rowData)));
-      }
-      document.dispatchEvent(new Event("recalculateMonday"));
-    }
+  function saveDataFromContainer(container) {
+    if (!container) return;
+    const storageKey = container.dataset.storageKey;
+    if (!storageKey) return;
 
-    const savedDataRaw = JSON.parse(localStorage.getItem(prefix) || "[]");
-    const savedData = Array.isArray(savedDataRaw) ? savedDataRaw : [];
-    renderRows(savedData);
-
-    container.addEventListener("click", function (e) {
-      if (e.target.classList.contains("btn-remove")) {
-        const row = e.target.closest(".entry-row");
-        if (row && container.querySelectorAll(".entry-row").length > 1) {
-          row.remove();
-          saveData();
-          document.dispatchEvent(new Event("recalculateMonday"));
+    const data = [];
+    container.querySelectorAll(".entry-row").forEach((row) => {
+      const datetimeEl = row.querySelector(".current-datetime");
+      let timestamp = datetimeEl?.dataset.timestamp;
+      if (!timestamp) {
+        timestamp = new Date().toISOString();
+        if (datetimeEl) {
+          datetimeEl.dataset.timestamp = timestamp;
+          datetimeEl.textContent = formatDateTimeDisplay(timestamp);
         }
       }
 
-      if (e.target.classList.contains("btn-add")) {
-        const newRow = createRow();
-        container.appendChild(newRow);
-        saveData();
-        document.dispatchEvent(new Event("recalculateMonday"));
+      const detail = row.querySelector('input[type="text"]').value;
+      const amount = row.querySelector('input[type="number"]').value;
+      data.push({ timestamp, detail, amount });
+    });
+
+    localStorage.setItem(storageKey, JSON.stringify(data));
+
+    const day = container.dataset.day;
+    if (day) {
+      updateWeekend1DayTotals(day);
+    }
+  }
+
+  function handleContainerClick(event) {
+    const container = event.currentTarget;
+    if (!container) return;
+
+    if (event.target.classList.contains("btn-remove")) {
+      const row = event.target.closest(".entry-row");
+      if (row && container.querySelectorAll(".entry-row").length > 1) {
+        row.remove();
+        saveDataFromContainer(container);
       }
-    });
+    }
 
-    container.addEventListener("input", function () {
-      saveData();
-      document.dispatchEvent(new Event("recalculateMonday"));
-    });
+    if (event.target.classList.contains("btn-add")) {
+      const placeholder = container.dataset.placeholder || "";
+      container.appendChild(createRow(placeholder));
+      saveDataFromContainer(container);
+    }
   }
 
-  // Apply persistence to both sides
-  setupPersistentInputs(
-    "mondayAddInputs",
-    "Monday_Add",
-    "Detail (e.g. Salary, Bonus)"
-  );
-  setupPersistentInputs(
-    "mondayPaidInputs",
-    "Monday_Paid",
-    "Detail (e.g. Rent, Food)"
-  );
-});
-
-
-document.addEventListener("DOMContentLoaded", function () {
-  const assetInput = document.querySelector('input[name="asset1"]');
-  const weekendMondayInput = document.querySelector('input[name="Weekend_1_Monday"]');
-  const mondayAddTotalText = document.getElementById("Monday_1_addTotal");
-
-  const mondayPaidContainer = document.getElementById("mondayPaidInputs");
-  const mondayAddContainer = document.getElementById("mondayAddInputs");
-
-  function updateMondayTotals() {
-    const assetVal = parseFloat((assetInput?.value || "0").replace(/,/g, "")) || 0;
-
-    // Sum Paid inputs
-    let paidTotal = 0;
-    mondayPaidContainer.querySelectorAll('input[type="number"]').forEach(inp => {
-      paidTotal += parseFloat(inp.value) || 0;
-    });
-    weekendMondayInput.value = paidTotal.toLocaleString();
-    localStorage.setItem("Weekend_1_Monday", weekendMondayInput.value);
-
-    // Sum Add inputs
-    let addTotal = 0;
-    mondayAddContainer.querySelectorAll('input[type="number"]').forEach(inp => {
-      addTotal += parseFloat(inp.value) || 0;
-    });
-
-    // Remaining = Asset + Add - Paid
-    const remaining = assetVal + addTotal - paidTotal;
-
-    mondayAddTotalText.textContent = "Remaining: " + remaining.toLocaleString();
-    localStorage.setItem("Monday_1_addTotal", remaining);
+  function handleContainerInput(event) {
+    const container = event.currentTarget;
+    if (!container) return;
+    saveDataFromContainer(container);
   }
 
-  // Trigger recalculation on every change
-  assetInput.addEventListener("input", updateMondayTotals);
-  weekendMondayInput.addEventListener("input", updateMondayTotals);
-  mondayPaidContainer.addEventListener("input", updateMondayTotals);
-  mondayAddContainer.addEventListener("input", updateMondayTotals);
-  document.addEventListener("recalculateMonday", updateMondayTotals);
+  [addContainer, paidContainer]
+    .filter(Boolean)
+    .forEach((container) => {
+      container.addEventListener("click", handleContainerClick);
+      container.addEventListener("input", handleContainerInput);
+    });
 
-  // Load saved remain on startup
-  const savedRemain = localStorage.getItem("Monday_1_addTotal");
-  if (savedRemain !== null) {
-    mondayAddTotalText.textContent = "Remaining: " + parseFloat(savedRemain).toLocaleString();
-  } else {
-    updateMondayTotals();
-  }
+  dayButtons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const day = btn.dataset.day;
+      if (!day) return;
+      currentDay = day;
 
-  // Ensure totals are correct after any programmatic changes
-  updateMondayTotals();
+      if (dayModalLabel) {
+        dayModalLabel.textContent = `${day} Details`;
+      }
+      if (dayModalDescription) {
+        dayModalDescription.textContent = `Manage your ${day} transactions:`;
+      }
+
+      renderContainer(
+        addContainer,
+        day,
+        "Add",
+        detailPlaceholders.Add
+      );
+      renderContainer(
+        paidContainer,
+        day,
+        "Paid",
+        detailPlaceholders.Paid
+      );
+
+      dayModal.show();
+      updateWeekend1DayTotals(day);
+    });
+  });
+
+  modalEl.addEventListener("hidden.bs.modal", () => {
+    if (currentDay) {
+      updateWeekend1DayTotals(currentDay);
+      currentDay = null;
+    }
+  });
+
+  refreshAllDays();
 });
