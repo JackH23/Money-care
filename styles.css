@@ -9,6 +9,11 @@ display: block;
 position: relative;
 }
 
+/* Force all day inputs (Tue–Sun) to stretch full width */
+.number-input {
+  width: 100% !important;
+}
+
 .nav-button {
   cursor: pointer;
   position: fixed;
