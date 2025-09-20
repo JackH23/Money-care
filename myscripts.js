@@ -533,73 +533,143 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 document.addEventListener("DOMContentLoaded", function () {
-  function setupPersistentInputs(containerId, prefix) {
+  function setupPersistentInputs(containerId, prefix, detailPlaceholder) {
     const container = document.getElementById(containerId);
+    if (!container) return;
 
-    // Load saved data
-    const savedData = JSON.parse(localStorage.getItem(prefix) || "[]");
-    if (savedData.length > 0) {
-      container.innerHTML = ""; // clear default row
-      savedData.forEach((row, index) => {
-        const group = document.createElement("div");
-        group.className = "input-group mb-2";
-        group.innerHTML = `
-          <div class="d-flex mb-2 gap-2">
-            <input type="date" class="form-control" name="${prefix}_date_${index}" value="${row.date || ''}" />
-            <input type="time" class="form-control" name="${prefix}_time_${index}" value="${row.time || ''}" />
-          </div>
-          <div class="input-group">
-            <input type="text" class="form-control" name="${prefix}_detail_${index}" placeholder="Detail" value="${row.detail}" />
-            <input type="number" class="form-control" name="${prefix}_amount_${index}" placeholder="Amount" value="${row.amount}" />
-            <button type="button" class="btn btn-success btn-add">+</button>
-            <button type="button" class="btn btn-danger btn-remove">−</button>
-          </div>
-        `;
-        container.appendChild(group);
+    function formatDateTimeDisplay(input) {
+      const date = typeof input === "string" ? new Date(input) : input;
+      if (!(date instanceof Date) || Number.isNaN(date.getTime())) {
+        return "";
+      }
+
+      const day = String(date.getDate()).padStart(2, "0");
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const year = date.getFullYear();
+      const hours = String(date.getHours()).padStart(2, "0");
+      const minutes = String(date.getMinutes()).padStart(2, "0");
+      return `${day}/${month}/${year} ${hours}:${minutes}`;
+    }
+
+    function resolveTimestamp(rowData = {}) {
+      if (rowData.timestamp) {
+        const parsed = new Date(rowData.timestamp);
+        if (!Number.isNaN(parsed.getTime())) {
+          return parsed.toISOString();
+        }
+      }
+
+      if (rowData.date || rowData.time) {
+        const isoSource = rowData.date
+          ? `${rowData.date}T${rowData.time || "00:00"}`
+          : `${new Date().toISOString().split("T")[0]}T${rowData.time}`;
+        const parsed = new Date(isoSource);
+        if (!Number.isNaN(parsed.getTime())) {
+          return parsed.toISOString();
+        }
+      }
+
+      return new Date().toISOString();
+    }
+
+    function createRow(rowData = {}) {
+      const row = document.createElement("div");
+      row.className = "mb-2 border rounded p-2 entry-row";
+      row.innerHTML = `
+        <p class="current-datetime text-muted mb-2"></p>
+        <div class="input-group">
+          <input type="text" class="form-control" placeholder="${detailPlaceholder}" />
+          <input type="number" class="form-control" placeholder="Amount" />
+          <button type="button" class="btn btn-success btn-add">+</button>
+          <button type="button" class="btn btn-danger btn-remove">−</button>
+        </div>
+      `;
+
+      const timestamp = resolveTimestamp(rowData);
+      const datetimeEl = row.querySelector(".current-datetime");
+      datetimeEl.dataset.timestamp = timestamp;
+      datetimeEl.textContent = formatDateTimeDisplay(timestamp);
+
+      const detailInput = row.querySelector('input[type="text"]');
+      const amountInput = row.querySelector('input[type="number"]');
+      detailInput.value = rowData.detail || "";
+      amountInput.value = rowData.amount || "";
+
+      return row;
+    }
+
+    function saveData() {
+      const data = [];
+      container.querySelectorAll(".entry-row").forEach((row) => {
+        const datetimeEl = row.querySelector(".current-datetime");
+        let timestamp = datetimeEl?.dataset.timestamp;
+        if (!timestamp) {
+          timestamp = new Date().toISOString();
+          if (datetimeEl) {
+            datetimeEl.dataset.timestamp = timestamp;
+            datetimeEl.textContent = formatDateTimeDisplay(timestamp);
+          }
+        }
+
+        const detail = row.querySelector('input[type="text"]').value;
+        const amount = row.querySelector('input[type="number"]').value;
+        data.push({ timestamp, detail, amount });
       });
+
+      localStorage.setItem(prefix, JSON.stringify(data));
+    }
+
+    function renderRows(data) {
+      container.innerHTML = "";
+      if (data.length === 0) {
+        container.appendChild(createRow());
+      } else {
+        data.forEach((rowData) => container.appendChild(createRow(rowData)));
+      }
       document.dispatchEvent(new Event("recalculateMonday"));
     }
 
-    // Event delegation
+    const savedDataRaw = JSON.parse(localStorage.getItem(prefix) || "[]");
+    const savedData = Array.isArray(savedDataRaw) ? savedDataRaw : [];
+    renderRows(savedData);
+
     container.addEventListener("click", function (e) {
       if (e.target.classList.contains("btn-remove")) {
-        if (container.children.length > 1) {
-          e.target.parentElement.remove();
+        const row = e.target.closest(".entry-row");
+        if (row && container.querySelectorAll(".entry-row").length > 1) {
+          row.remove();
           saveData();
           document.dispatchEvent(new Event("recalculateMonday"));
         }
       }
 
       if (e.target.classList.contains("btn-add")) {
-        const newGroup = e.target.parentElement.cloneNode(true);
-        newGroup.querySelectorAll("input").forEach((inp) => (inp.value = ""));
-        container.appendChild(newGroup);
+        const newRow = createRow();
+        container.appendChild(newRow);
         saveData();
         document.dispatchEvent(new Event("recalculateMonday"));
       }
     });
 
-    // Save on input
-    container.addEventListener("input", saveData);
-
-    function saveData() {
-      const data = [];
-      container.querySelectorAll(".input-group").forEach((group) => {
-        const parent = group.parentElement;
-        const date = parent.querySelector("input[type='date']").value;
-        const time = parent.querySelector("input[type='time']").value;
-        const detail = group.querySelector("input[type='text']").value;
-        const amount = group.querySelector("input[type='number']").value;
-        data.push({ date, time, detail, amount });
-      });
-      localStorage.setItem(prefix, JSON.stringify(data));
-    }
+    container.addEventListener("input", function () {
+      saveData();
+      document.dispatchEvent(new Event("recalculateMonday"));
+    });
   }
 
   // Apply persistence to both sides
-  setupPersistentInputs("mondayAddInputs", "Monday_Add");
-  setupPersistentInputs("mondayPaidInputs", "Monday_Paid");
+  setupPersistentInputs(
+    "mondayAddInputs",
+    "Monday_Add",
+    "Detail (e.g. Salary, Bonus)"
+  );
+  setupPersistentInputs(
+    "mondayPaidInputs",
+    "Monday_Paid",
+    "Detail (e.g. Rent, Food)"
+  );
 });
+
 
 document.addEventListener("DOMContentLoaded", function () {
   const assetInput = document.querySelector('input[name="asset1"]');
