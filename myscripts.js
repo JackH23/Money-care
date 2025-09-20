@@ -551,17 +551,11 @@ document.addEventListener("DOMContentLoaded", function () {
         `;
         container.appendChild(group);
       });
+      document.dispatchEvent(new Event("recalculateMonday"));
     }
 
     // Event delegation
     container.addEventListener("click", function (e) {
-      if (e.target.classList.contains("btn-add")) {
-        const newGroup = e.target.parentElement.cloneNode(true);
-        newGroup.querySelectorAll("input").forEach((inp) => (inp.value = ""));
-        container.appendChild(newGroup);
-        saveData();
-      }
-
       if (e.target.classList.contains("btn-remove")) {
         if (container.children.length > 1) {
           e.target.parentElement.remove();
@@ -596,47 +590,6 @@ document.addEventListener("DOMContentLoaded", function () {
   // Apply persistence to both sides
   setupPersistentInputs("mondayAddInputs", "Monday_Add");
   setupPersistentInputs("mondayPaidInputs", "Monday_Paid");
-});
-
-document.addEventListener("DOMContentLoaded", function () {
-  const weekendMondayInput = document.querySelector('input[name="Weekend_1_Monday"]');
-  const mondayAddTotalText = document.getElementById("Monday_1_addTotal");
-  const assetInput = document.querySelector('input[name="asset1"]');
-
-  function updateMondayTotals() {
-    const assetVal = parseFloat((assetInput?.value || "0").replace(/,/g, "")) || 0;
-    const mondayVal = parseFloat((weekendMondayInput?.value || "0").replace(/,/g, "")) || 0;
-
-    // Remaining = Asset - Monday
-    const remaining = assetVal - mondayVal;
-
-    mondayAddTotalText.textContent = "Remaining: " + remaining.toLocaleString();
-    localStorage.setItem("Monday_1_addTotal", remaining);
-  }
-
-  // Recalculate when asset or Monday changes
-  weekendMondayInput.addEventListener("input", updateMondayTotals);
-  assetInput.addEventListener("input", updateMondayTotals);
-
-  // Load saved remain on startup
-  const savedRemain = localStorage.getItem("Monday_1_addTotal");
-  if (savedRemain !== null) {
-    mondayAddTotalText.textContent = "Remaining: " + parseFloat(savedRemain).toLocaleString();
-  } else {
-    updateMondayTotals();
-  }
-
-  // 👇 normal input listeners
-  assetInput.addEventListener("input", updateMondayTotals);
-  weekendMondayInput.addEventListener("input", updateMondayTotals);
-  mondayPaidContainer.addEventListener("input", updateMondayTotals);
-  mondayAddContainer.addEventListener("input", updateMondayTotals);
-
-  // 👇 put the new listener here
-  document.addEventListener("recalculateMonday", updateMondayTotals);
-
-  // initial run
-  updateMondayTotals();
 });
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -676,6 +629,7 @@ document.addEventListener("DOMContentLoaded", function () {
   weekendMondayInput.addEventListener("input", updateMondayTotals);
   mondayPaidContainer.addEventListener("input", updateMondayTotals);
   mondayAddContainer.addEventListener("input", updateMondayTotals);
+  document.addEventListener("recalculateMonday", updateMondayTotals);
 
   // Load saved remain on startup
   const savedRemain = localStorage.getItem("Monday_1_addTotal");
@@ -684,9 +638,7 @@ document.addEventListener("DOMContentLoaded", function () {
   } else {
     updateMondayTotals();
   }
-});
 
-const savedRemain = localStorage.getItem('Monday_1_addTotal');
-if (savedRemain !== null) {
-  mondayAddTotalText.textContent = "Remaining: " + parseFloat(savedRemain).toLocaleString();
-}
+  // Ensure totals are correct after any programmatic changes
+  updateMondayTotals();
+});
