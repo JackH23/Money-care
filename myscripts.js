@@ -109,6 +109,11 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     });
   });
+
+  const storedFinal = localStorage.getItem("Weekend1_Final_Remaining");
+  if (storedFinal !== null) {
+    updateWeekend1FinalRemainingDisplay(storedFinal, false);
+  }
 });
 
 // Save input values to localStorage
@@ -126,6 +131,26 @@ document.querySelectorAll("input.number-input").forEach((input) => {
     localStorage.setItem(name, input.value);
   });
 });
+
+function updateWeekend1FinalRemainingDisplay(value, persist = true) {
+  const displayEl = document.getElementById("Weekend1_Final_Remaining");
+  if (!displayEl) {
+    return;
+  }
+
+  const numericValue =
+    typeof value === "number" && Number.isFinite(value)
+      ? value
+      : parseNumeric(String(value ?? ""));
+
+  const normalized = Number.isFinite(numericValue) ? numericValue : 0;
+
+  displayEl.textContent = `Remaining: ${normalized.toLocaleString()}`;
+
+  if (persist) {
+    localStorage.setItem("Weekend1_Final_Remaining", normalized.toString());
+  }
+}
 
 function updateWeekend1DayTotals(day, startingBalance = null) {
   const paidData = loadStoredArray(getWeekend1StorageKey(day, "Paid"));
@@ -178,6 +203,8 @@ function calculateWeekend1() {
     const nextBalance = updateWeekend1DayTotals(day, runningBalance);
     runningBalance = Number.isFinite(nextBalance) ? nextBalance : 0;
   });
+
+  updateWeekend1FinalRemainingDisplay(runningBalance);
 }
 
 document
