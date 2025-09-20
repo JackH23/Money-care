@@ -127,10 +127,7 @@ document.querySelectorAll("input.number-input").forEach((input) => {
   });
 });
 
-function updateWeekend1DayTotals(day) {
-  const assetInput = document.querySelector('input[name="asset1"]');
-  const assetVal = parseNumeric(assetInput?.value || "0");
-
+function updateWeekend1DayTotals(day, startingBalance = null) {
   const paidData = loadStoredArray(getWeekend1StorageKey(day, "Paid"));
   const addData = loadStoredArray(getWeekend1StorageKey(day, "Add"));
 
@@ -151,20 +148,36 @@ function updateWeekend1DayTotals(day) {
     localStorage.setItem(`Weekend_1_${day}`, totalInput.value);
   }
 
-  const remaining = assetVal + addTotal - paidTotal;
+  const assetInput = document.querySelector('input[name="asset1"]');
+  const assetVal = parseNumeric(assetInput?.value || "0");
+  const hasStartingBalance =
+    typeof startingBalance === "number" && !Number.isNaN(startingBalance);
+  const baseBalance = hasStartingBalance ? startingBalance : assetVal;
+
+  const remaining = baseBalance + addTotal - paidTotal;
+  const normalizedRemaining = Number.isFinite(remaining) ? remaining : 0;
   const displayEl = document.getElementById(`${day}_1_addTotal`);
   if (displayEl) {
-    displayEl.textContent = `Remaining: ${remaining.toLocaleString()}`;
+    displayEl.textContent = `Remaining: ${normalizedRemaining.toLocaleString()}`;
   }
 
   localStorage.setItem(
     getWeekend1StorageKey(day, "Remaining"),
-    remaining
+    normalizedRemaining
   );
+
+  return normalizedRemaining;
 }
 
 function calculateWeekend1() {
-  weekend1Days.forEach(updateWeekend1DayTotals);
+  const assetInput = document.querySelector('input[name="asset1"]');
+  let runningBalance = parseNumeric(assetInput?.value || "0");
+  runningBalance = Number.isFinite(runningBalance) ? runningBalance : 0;
+
+  weekend1Days.forEach((day) => {
+    const nextBalance = updateWeekend1DayTotals(day, runningBalance);
+    runningBalance = Number.isFinite(nextBalance) ? nextBalance : 0;
+  });
 }
 
 document
@@ -539,7 +552,7 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   const refreshAllDays = () => {
-    weekend1Days.forEach(updateWeekend1DayTotals);
+    calculateWeekend1();
   };
 
   if (assetInput) {
@@ -674,7 +687,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const day = container.dataset.day;
     if (day) {
-      updateWeekend1DayTotals(day);
+      calculateWeekend1();
     }
   }
 
@@ -737,13 +750,13 @@ document.addEventListener("DOMContentLoaded", function () {
       );
 
       dayModal.show();
-      updateWeekend1DayTotals(day);
+      calculateWeekend1();
     });
   });
 
   modalEl.addEventListener("hidden.bs.modal", () => {
     if (currentDay) {
-      updateWeekend1DayTotals(currentDay);
+      calculateWeekend1();
       currentDay = null;
     }
   });
