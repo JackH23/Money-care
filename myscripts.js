@@ -13,6 +13,8 @@ document.querySelectorAll(".number-input").forEach((input) => {
 });
 
 const sections = document.querySelectorAll(".section");
+const progressDots = document.querySelectorAll(".progress-dot");
+const weekendCounter = document.getElementById("weekendCounter");
 let currentIndex = 0;
 
 const weekend1Days = [
@@ -65,19 +67,43 @@ function loadStoredArray(key) {
 }
 
 function showSection(index) {
+  if (!sections.length) {
+    return;
+  }
+
+  const normalizedIndex = ((index % sections.length) + sections.length) % sections.length;
+  currentIndex = normalizedIndex;
+
   sections.forEach((section, i) => {
-    section.classList.toggle("active", i === index);
+    section.classList.toggle("active", i === currentIndex);
   });
+
+  progressDots.forEach((dot, i) => {
+    const isActive = i === currentIndex;
+    dot.classList.toggle("active", isActive);
+    dot.setAttribute("aria-pressed", isActive ? "true" : "false");
+  });
+
+  if (weekendCounter) {
+    weekendCounter.textContent = `Weekend ${currentIndex + 1} of ${sections.length}`;
+  }
 }
 
 document.getElementById("nextBtn").addEventListener("click", () => {
-  currentIndex = (currentIndex + 1) % sections.length;
-  showSection(currentIndex);
+  showSection(currentIndex + 1);
 });
 
 document.getElementById("prevBtn").addEventListener("click", () => {
-  currentIndex = (currentIndex - 1 + sections.length) % sections.length;
-  showSection(currentIndex);
+  showSection(currentIndex - 1);
+});
+
+progressDots.forEach((dot) => {
+  dot.addEventListener("click", () => {
+    const targetIndex = Number.parseInt(dot.dataset.index, 10);
+    if (!Number.isNaN(targetIndex)) {
+      showSection(targetIndex);
+    }
+  });
 });
 
 showSection(currentIndex);

@@ -1,584 +1,1067 @@
-<!DOCTYPE htexthtml lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Money_management</title>
-  <link rel="stylesheet" href="styles.css">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="styles.css" />
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
 </head>
-<body>
-  <div class="container mt-5 slideshow-wrapper">
-    <!-- Slideshow Controls -->
-    <button id="prevBtn" class="nav-button">&#10094;</button>
-    <button id="nextBtn" class="nav-button">&#10095;</button>    
-    
-    <div id="weekend-sections">
-      
-      <!-- Weekend 1 -->
-      <div class="section active">
-        <form>
-          <div class="card shadow p-4">
-            
-            <!-- Sticky Weekend Header -->
-            <div class="weekend-header-sticky bg-white border-bottom mb-3">
-              <h1 class="number-center mb-3 text-center">Weekend 1</h1>
-              <div class="asset d-flex align-items-center gap-2 mb-3">
-                <label class="mb-0" style="width: 100px;">Your asset</label>
-                <input name="asset1" type="text" class="form-control number-input flex-grow-1" placeholder="amount" required>
-                <button type="button" id="Btn_Manage1" class="btn btn-primary">Click</button>
-              </div>
-              <p id="Weekend1_Final_Remaining" class="fw-bold text-success mb-0">Remaining: 0</p>
-            </div>
+<body class="app-body">
+  <div class="app-shell">
+    <header class="page-hero text-center">
+      <span class="badge hero-badge text-uppercase">Money Care</span>
+      <h1 class="hero-title display-5 fw-bold">Money Care Planner</h1>
+      <p class="hero-lead lead text-muted mb-0">
+        Set your weekend budgets, log your cash flow, and watch the balance update in real time.
+      </p>
+    </header>
 
-            <p class="number-center">Please fill in this form to manage your asset.</p>
-            <hr />
-
-            <!-- Monday -->
-            <div class="mb-3">
-              <div class="d-flex justify-content-between align-items-center">
-                <label class="form-label mb-0"><b>Monday</b></label>
-                <button type="button" class="btn btn-outline-primary btn-sm day-modal-trigger" data-day="Monday">ຄິດໄລ່ເງີນ</button>
-              </div>
-
-              <div class="row align-items-center mt-2">
-                <div class="col-12 mb-2">
-                  <input name="Weekend_1_Monday" type="text" class="form-control number-input" placeholder="Paid total" required />
-                </div>
-                <div class="col-12 mb-2">
-                  <p id="Monday_1_addTotal" class="fw-bold text-success">Remaining: 0</p>
-                </div>
-              </div>
-            </div>
-
-            <!-- Tuesday -->
-            <div class="mb-3">
-              <div class="d-flex justify-content-between align-items-center">
-                <label class="form-label mb-0"><b>Tuesday</b></label>
-                <button type="button" class="btn btn-outline-primary btn-sm day-modal-trigger" data-day="Tuesday">ຄິດໄລ່ເງີນ</button>
-              </div>
-              <div class="row align-items-center mt-2">
-                <div class="col-12 mb-2">
-                  <input name="Weekend_1_Tuesday" type="text" class="form-control number-input bg-light border-primary" placeholder="amount" required />
-                </div>
-                <div class="col-12 mb-2">
-                  <p id="Tuesday_1_addTotal" class="fw-bold text-success">Remaining: 0</p>
-                </div>
-              </div>
-            </div>
-
-            <!-- Wednesday -->
-            <div class="mb-3">
-              <div class="d-flex justify-content-between align-items-center">
-                <label class="form-label mb-0"><b>Wednesday</b></label>
-                <button type="button" class="btn btn-outline-primary btn-sm day-modal-trigger" data-day="Wednesday">ຄິດໄລ່ເງີນ</button>
-              </div>
-              <div class="row align-items-center mt-2">
-                <div class="col-12 mb-2">
-                  <input name="Weekend_1_Wednesday" type="text" class="form-control number-input bg-light border-primary" placeholder="amount" required />
-                </div>
-                <div class="col-12 mb-2">
-                  <p id="Wednesday_1_addTotal" class="fw-bold text-success">Remaining: 0</p>
-                </div>
-              </div>
-            </div>
-
-            <!-- Thursday -->
-            <div class="mb-3">
-              <div class="d-flex justify-content-between align-items-center">
-                <label class="form-label mb-0"><b>Thursday</b></label>
-                <button type="button" class="btn btn-outline-primary btn-sm day-modal-trigger" data-day="Thursday">ຄິດໄລ່ເງີນ</button>
-              </div>
-              <div class="row align-items-center mt-2">
-                <div class="col-12 mb-2">
-                  <input name="Weekend_1_Thursday" type="text" class="form-control number-input bg-light border-primary" placeholder="amount" required />
-                </div>
-                <div class="col-12 mb-2">
-                  <p id="Thursday_1_addTotal" class="fw-bold text-success">Remaining: 0</p>
-                </div>
-              </div>
-            </div>
-
-            <!-- Friday -->
-            <div class="mb-3">
-              <div class="d-flex justify-content-between align-items-center">
-                <label class="form-label mb-0"><b>Friday</b></label>
-                <button type="button" class="btn btn-outline-primary btn-sm day-modal-trigger" data-day="Friday">ຄິດໄລ່ເງີນ</button>
-              </div>
-              <div class="row align-items-center mt-2">
-                <div class="col-12 mb-2">
-                  <input name="Weekend_1_Friday" type="text" class="form-control number-input" placeholder="amount" required />
-                </div>
-                <div class="col-12 mb-2">
-                  <p id="Friday_1_addTotal" class="fw-bold text-success">Remaining: 0</p>
-                </div>
-              </div>
-            </div>
-
-            <!-- Saturday -->
-            <div class="mb-3">
-              <div class="d-flex justify-content-between align-items-center">
-                <label class="form-label mb-0"><b>Saturday</b></label>
-                <button type="button" class="btn btn-outline-primary btn-sm day-modal-trigger" data-day="Saturday">ຄິດໄລ່ເງີນ</button>
-              </div>
-              <div class="row align-items-center mt-2">
-                <div class="col-12 mb-2">
-                  <input name="Weekend_1_Saturday" type="text" class="form-control number-input" placeholder="amount" required />
-                </div>
-                <div class="col-12 mb-2">
-                  <p id="Saturday_1_addTotal" class="fw-bold text-success">Remaining: 0</p>
-                </div>
-              </div>
-            </div>
-
-            <!-- Sunday -->
-            <div class="mb-3">
-              <div class="d-flex justify-content-between align-items-center">
-                <label class="form-label mb-0"><b>Sunday</b></label>
-                <button type="button" class="btn btn-outline-primary btn-sm day-modal-trigger" data-day="Sunday">ຄິດໄລ່ເງີນ</button>
-              </div>
-              <div class="row align-items-center mt-2">
-                <div class="col-12 mb-2">
-                  <input name="Weekend_1_Sunday" type="text" class="form-control number-input" placeholder="amount" required />
-                </div>
-                <div class="col-12 mb-2">
-                  <p id="Sunday_1_addTotal" class="fw-bold text-success">Remaining: 0</p>
-                </div>
-              </div>
-            </div>
-
-            <hr />
-
+    <main class="container mt-4">
+      <div class="slideshow-wrapper">
+        <div
+          class="weekend-navigation d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3"
+        >
+          <div
+            id="weekendCounter"
+            class="weekend-counter text-uppercase fw-semibold"
+            aria-live="polite"
+          >
+            Weekend 1 of 4
           </div>
-        </form>
-      </div>
 
-      <!-- Day modal reused for all days in Weekend 1 -->
-      <div class="modal fade" id="dayModal" tabindex="-1" aria-labelledby="dayModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="dayModalLabel">Day Details</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
+          <div class="progress-dots" role="tablist" aria-label="Select weekend">
+            <button
+              type="button"
+              class="progress-dot active"
+              data-index="0"
+              aria-label="Show Weekend 1"
+              aria-pressed="true"
+            >
+              <span class="dot"></span>
+              <span class="dot-label">Weekend 1</span>
+            </button>
+            <button
+              type="button"
+              class="progress-dot"
+              data-index="1"
+              aria-label="Show Weekend 2"
+              aria-pressed="false"
+            >
+              <span class="dot"></span>
+              <span class="dot-label">Weekend 2</span>
+            </button>
+            <button
+              type="button"
+              class="progress-dot"
+              data-index="2"
+              aria-label="Show Weekend 3"
+              aria-pressed="false"
+            >
+              <span class="dot"></span>
+              <span class="dot-label">Weekend 3</span>
+            </button>
+            <button
+              type="button"
+              class="progress-dot"
+              data-index="3"
+              aria-label="Show Weekend 4"
+              aria-pressed="false"
+            >
+              <span class="dot"></span>
+              <span class="dot-label">Weekend 4</span>
+            </button>
+          </div>
+        </div>
 
-            <div class="modal-body">
-              <p class="mb-3" id="dayModalDescription">Manage your transactions:</p>
+        <button id="prevBtn" class="nav-button" type="button" aria-label="Previous weekend">
+          &#10094;
+        </button>
+        <button id="nextBtn" class="nav-button" type="button" aria-label="Next weekend">
+          &#10095;
+        </button>
 
-              <div class="row">
-                <!-- Money Add Column -->
-                <div class="col-md-6">
-                  <h6>Money Add</h6>
-                  <div id="dayAddInputs" class="transaction-container">
-                    <!-- Rows are generated dynamically via JavaScript -->
+        <div id="weekend-sections">
+          <!-- Weekend 1 -->
+          <div class="section active">
+            <form>
+              <div class="card weekend-card shadow-lg border-0 p-4 p-md-5">
+                <div class="weekend-header-sticky bg-white rounded-4 shadow-sm p-3 p-md-4 mb-4">
+                  <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-2">
+                    <h1 class="number-center mb-0 text-center text-md-start">Weekend 1</h1>
+                    <p id="Weekend1_Final_Remaining" class="fw-bold text-success mb-0">Remaining: 0</p>
+                  </div>
+                  <div class="asset d-flex flex-column flex-md-row align-items-md-center gap-2 mt-3">
+                    <label class="mb-0 text-uppercase text-muted asset-label" style="width: auto;">Your asset</label>
+                    <input
+                      name="asset1"
+                      type="text"
+                      class="form-control number-input flex-grow-1"
+                      placeholder="amount"
+                      required
+                    />
+                    <button type="button" id="Btn_Manage1" class="btn btn-primary manage-btn">Update balance</button>
                   </div>
                 </div>
 
-                <!-- Money Paid Column -->
-                <div class="col-md-6">
-                  <h6>Money Paid</h6>
-                  <div id="dayPaidInputs" class="transaction-container">
-                    <!-- Rows are generated dynamically via JavaScript -->
+                <p class="number-center text-muted text-center mb-4">
+                  Please fill in this form to manage your asset.
+                </p>
+                <div class="soft-divider mb-4"></div>
+
+                <!-- Monday -->
+                <div class="mb-4 day-block">
+                  <div class="day-header">
+                    <label class="form-label mb-0"><b>Monday</b></label>
+                    <button
+                      type="button"
+                      class="btn btn-outline-primary btn-sm day-modal-trigger"
+                      data-day="Monday"
+                    >
+                      ຄິດໄລ່ເງີນ
+                    </button>
                   </div>
+
+                  <div class="row align-items-center mt-3 gy-2">
+                    <div class="col-12">
+                      <input
+                        name="Weekend_1_Monday"
+                        type="text"
+                        class="form-control number-input"
+                        placeholder="Paid total"
+                        required
+                      />
+                    </div>
+                    <div class="col-12">
+                      <p id="Monday_1_addTotal" class="fw-bold text-success">Remaining: 0</p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Tuesday -->
+                <div class="mb-4 day-block">
+                  <div class="day-header">
+                    <label class="form-label mb-0"><b>Tuesday</b></label>
+                    <button
+                      type="button"
+                      class="btn btn-outline-primary btn-sm day-modal-trigger"
+                      data-day="Tuesday"
+                    >
+                      ຄິດໄລ່ເງີນ
+                    </button>
+                  </div>
+                  <div class="row align-items-center mt-3 gy-2">
+                    <div class="col-12">
+                      <input
+                        name="Weekend_1_Tuesday"
+                        type="text"
+                        class="form-control number-input bg-light border-primary"
+                        placeholder="amount"
+                        required
+                      />
+                    </div>
+                    <div class="col-12">
+                      <p id="Tuesday_1_addTotal" class="fw-bold text-success">Remaining: 0</p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Wednesday -->
+                <div class="mb-4 day-block">
+                  <div class="day-header">
+                    <label class="form-label mb-0"><b>Wednesday</b></label>
+                    <button
+                      type="button"
+                      class="btn btn-outline-primary btn-sm day-modal-trigger"
+                      data-day="Wednesday"
+                    >
+                      ຄິດໄລ່ເງີນ
+                    </button>
+                  </div>
+                  <div class="row align-items-center mt-3 gy-2">
+                    <div class="col-12">
+                      <input
+                        name="Weekend_1_Wednesday"
+                        type="text"
+                        class="form-control number-input bg-light border-primary"
+                        placeholder="amount"
+                        required
+                      />
+                    </div>
+                    <div class="col-12">
+                      <p id="Wednesday_1_addTotal" class="fw-bold text-success">Remaining: 0</p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Thursday -->
+                <div class="mb-4 day-block">
+                  <div class="day-header">
+                    <label class="form-label mb-0"><b>Thursday</b></label>
+                    <button
+                      type="button"
+                      class="btn btn-outline-primary btn-sm day-modal-trigger"
+                      data-day="Thursday"
+                    >
+                      ຄິດໄລ່ເງີນ
+                    </button>
+                  </div>
+                  <div class="row align-items-center mt-3 gy-2">
+                    <div class="col-12">
+                      <input
+                        name="Weekend_1_Thursday"
+                        type="text"
+                        class="form-control number-input bg-light border-primary"
+                        placeholder="amount"
+                        required
+                      />
+                    </div>
+                    <div class="col-12">
+                      <p id="Thursday_1_addTotal" class="fw-bold text-success">Remaining: 0</p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Friday -->
+                <div class="mb-4 day-block">
+                  <div class="day-header">
+                    <label class="form-label mb-0"><b>Friday</b></label>
+                    <button
+                      type="button"
+                      class="btn btn-outline-primary btn-sm day-modal-trigger"
+                      data-day="Friday"
+                    >
+                      ຄິດໄລ່ເງີນ
+                    </button>
+                  </div>
+                  <div class="row align-items-center mt-3 gy-2">
+                    <div class="col-12">
+                      <input
+                        name="Weekend_1_Friday"
+                        type="text"
+                        class="form-control number-input"
+                        placeholder="amount"
+                        required
+                      />
+                    </div>
+                    <div class="col-12">
+                      <p id="Friday_1_addTotal" class="fw-bold text-success">Remaining: 0</p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Saturday -->
+                <div class="mb-4 day-block">
+                  <div class="day-header">
+                    <label class="form-label mb-0"><b>Saturday</b></label>
+                    <button
+                      type="button"
+                      class="btn btn-outline-primary btn-sm day-modal-trigger"
+                      data-day="Saturday"
+                    >
+                      ຄິດໄລ່ເງີນ
+                    </button>
+                  </div>
+                  <div class="row align-items-center mt-3 gy-2">
+                    <div class="col-12">
+                      <input
+                        name="Weekend_1_Saturday"
+                        type="text"
+                        class="form-control number-input"
+                        placeholder="amount"
+                        required
+                      />
+                    </div>
+                    <div class="col-12">
+                      <p id="Saturday_1_addTotal" class="fw-bold text-success">Remaining: 0</p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Sunday -->
+                <div class="mb-3 day-block">
+                  <div class="day-header">
+                    <label class="form-label mb-0"><b>Sunday</b></label>
+                    <button
+                      type="button"
+                      class="btn btn-outline-primary btn-sm day-modal-trigger"
+                      data-day="Sunday"
+                    >
+                      ຄິດໄລ່ເງີນ
+                    </button>
+                  </div>
+                  <div class="row align-items-center mt-3 gy-2">
+                    <div class="col-12">
+                      <input
+                        name="Weekend_1_Sunday"
+                        type="text"
+                        class="form-control number-input"
+                        placeholder="amount"
+                        required
+                      />
+                    </div>
+                    <div class="col-12">
+                      <p id="Sunday_1_addTotal" class="fw-bold text-success">Remaining: 0</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="soft-divider mt-4"></div>
+              </div>
+            </form>
+          </div>
+
+          <!-- Day modal reused for all days in Weekend 1 -->
+          <div class="modal fade" id="dayModal" tabindex="-1" aria-labelledby="dayModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+              <div class="modal-content day-modal">
+                <div class="modal-header border-0">
+                  <div>
+                    <p class="modal-eyebrow text-uppercase text-muted mb-1">Daily breakdown</p>
+                    <h5 class="modal-title" id="dayModalLabel">Day Details</h5>
+                  </div>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body pt-0">
+                  <p class="mb-4 text-muted" id="dayModalDescription">Manage your transactions:</p>
+
+                  <div class="row g-4">
+                    <!-- Money Add Column -->
+                    <div class="col-md-6">
+                      <h6 class="text-uppercase text-muted">Money Add</h6>
+                      <div id="dayAddInputs" class="transaction-container"></div>
+                    </div>
+
+                    <!-- Money Paid Column -->
+                    <div class="col-md-6">
+                      <h6 class="text-uppercase text-muted">Money Paid</h6>
+                      <div id="dayPaidInputs" class="transaction-container"></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="modal-footer border-0 pt-0">
+                  <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
                 </div>
               </div>
             </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
+          </div>
+
+          <!-- Weekend 2 -->
+          <div class="section">
+            <form>
+              <div class="card weekend-card shadow-lg border-0 p-4 p-md-5">
+                <div class="weekend-header-sticky bg-white rounded-4 shadow-sm p-3 p-md-4 mb-4">
+                  <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-2">
+                    <h1 class="number-center mb-0 text-center text-md-start">Weekend 2</h1>
+                    <div class="asset d-flex flex-column flex-md-row align-items-md-center gap-2 mt-3 mt-md-0">
+                      <label class="mb-0 text-uppercase text-muted asset-label" style="width: auto;">Your asset</label>
+                      <input
+                        name="asset2"
+                        type="text"
+                        class="form-control number-input flex-grow-1"
+                        placeholder="amount"
+                        required
+                      />
+                      <button type="button" id="Btn_Manage2" class="btn btn-primary manage-btn">Update balance</button>
+                    </div>
+                  </div>
+                </div>
+                <p class="number-center text-muted text-center mb-4">
+                  Please fill in this form to manage your asset.
+                </p>
+                <div class="soft-divider mb-4"></div>
+
+                <div class="mb-4 day-block">
+                  <label class="form-label text-uppercase text-muted"><b>Monday</b></label>
+                  <div class="row align-items-center gy-3 mt-2">
+                    <div class="col-12 col-md-4">
+                      <input
+                        name="Weekend_2_Monday"
+                        type="text"
+                        class="form-control number-input"
+                        placeholder="amount"
+                        required
+                      />
+                    </div>
+
+                    <div
+                      class="col-12 col-md-3 d-flex justify-content-center align-items-center highlight-chip"
+                    >
+                      <span>LEFT</span>
+                    </div>
+
+                    <div class="col-12 col-md-4">
+                      <input
+                        name="Monday_2_left"
+                        type="text"
+                        class="form-control number-input"
+                        placeholder="amount"
+                        required
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="mb-4 day-block">
+                  <label class="form-label text-uppercase text-muted"><b>Tuesday</b></label>
+                  <div class="row align-items-center gy-3 mt-2">
+                    <div class="col-12 col-md-4">
+                      <input
+                        name="Weekend_2_Tuesday"
+                        type="text"
+                        class="form-control number-input"
+                        placeholder="amount"
+                        required
+                      />
+                    </div>
+
+                    <div
+                      class="col-12 col-md-3 d-flex justify-content-center align-items-center highlight-chip"
+                    >
+                      <span>LEFT</span>
+                    </div>
+
+                    <div class="col-12 col-md-4">
+                      <input
+                        name="Tuesday_2_left"
+                        type="text"
+                        class="form-control number-input"
+                        placeholder="amount"
+                        required
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="mb-4 day-block">
+                  <label class="form-label text-uppercase text-muted"><b>Wednesday</b></label>
+                  <div class="row align-items-center gy-3 mt-2">
+                    <div class="col-12 col-md-4">
+                      <input
+                        name="Weekend_2_Wednesday"
+                        type="text"
+                        class="form-control number-input bg-light border-primary"
+                        placeholder="amount"
+                        required
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="mb-4 day-block">
+                  <label class="form-label text-uppercase text-muted"><b>Thursday</b></label>
+                  <div class="row align-items-center gy-3 mt-2">
+                    <div class="col-12 col-md-4">
+                      <input
+                        name="Weekend_2_Thursday"
+                        type="text"
+                        class="form-control number-input bg-light border-primary"
+                        placeholder="amount"
+                        required
+                      />
+                    </div>
+                    <div class="col-12 col-md-3">
+                      <input
+                        name="Weekend_2_result"
+                        type="text"
+                        class="form-control number-input bg-light"
+                        placeholder="amount"
+                        required
+                      />
+                    </div>
+                    <div
+                      class="col-12 col-md-1 d-flex justify-content-center align-items-center highlight-chip"
+                    >
+                      <span>LEFT</span>
+                    </div>
+                    <div class="col-12 col-md-3">
+                      <input
+                        name="Thursday_2_left"
+                        type="text"
+                        class="form-control number-input"
+                        placeholder="amount"
+                        required
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="mb-4 day-block">
+                  <label class="form-label text-uppercase text-muted"><b>Friday</b></label>
+                  <div class="row align-items-center gy-3 mt-2">
+                    <div class="col-12 col-md-4">
+                      <input
+                        name="Weekend_2_Friday"
+                        type="text"
+                        class="form-control number-input"
+                        placeholder="amount"
+                        required
+                      />
+                    </div>
+
+                    <div
+                      class="col-12 col-md-3 d-flex justify-content-center align-items-center highlight-chip"
+                    >
+                      <span>LEFT</span>
+                    </div>
+
+                    <div class="col-12 col-md-4">
+                      <input
+                        name="Friday_2_left"
+                        type="text"
+                        class="form-control number-input"
+                        placeholder="amount"
+                        required
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="mb-4 day-block">
+                  <label class="form-label text-uppercase text-muted"><b>Saturday</b></label>
+                  <div class="row align-items-center gy-3 mt-2">
+                    <div class="col-12 col-md-4">
+                      <input
+                        name="Weekend_2_Saturday"
+                        type="text"
+                        class="form-control number-input"
+                        placeholder="amount"
+                        required
+                      />
+                    </div>
+                    <div
+                      class="col-12 col-md-3 d-flex justify-content-center align-items-center highlight-chip"
+                    >
+                      <span>LEFT</span>
+                    </div>
+                    <div class="col-12 col-md-4">
+                      <input
+                        name="Saturday_2_left"
+                        type="text"
+                        class="form-control number-input"
+                        placeholder="amount"
+                        required
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="mb-3 day-block">
+                  <label class="form-label text-uppercase text-muted"><b>Sunday</b></label>
+                  <div class="row align-items-center gy-3 mt-2">
+                    <div class="col-12 col-md-4">
+                      <input
+                        name="Weekend_2_Sunday"
+                        type="text"
+                        class="form-control number-input"
+                        placeholder="amount"
+                        required
+                      />
+                    </div>
+                    <div
+                      class="col-12 col-md-3 d-flex justify-content-center align-items-center highlight-chip"
+                    >
+                      <span>LEFT</span>
+                    </div>
+                    <div class="col-12 col-md-4">
+                      <input
+                        name="Sunday_2_left"
+                        type="text"
+                        class="form-control number-input"
+                        placeholder="amount"
+                        required
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="soft-divider mt-4"></div>
+              </div>
+            </form>
+          </div>
+
+          <!-- Weekend 3 -->
+          <div class="section">
+            <form>
+              <div class="card weekend-card shadow-lg border-0 p-4 p-md-5">
+                <div class="weekend-header-sticky bg-white rounded-4 shadow-sm p-3 p-md-4 mb-4">
+                  <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-2">
+                    <h1 class="number-center mb-0 text-center text-md-start">Weekend 3</h1>
+                    <div class="asset d-flex flex-column flex-md-row align-items-md-center gap-2 mt-3 mt-md-0">
+                      <label class="mb-0 text-uppercase text-muted asset-label" style="width: auto;">Your asset</label>
+                      <input
+                        name="asset3"
+                        type="text"
+                        class="form-control number-input flex-grow-1"
+                        placeholder="amount"
+                        required
+                      />
+                      <button type="button" id="Btn_Manage3" class="btn btn-primary manage-btn">Update balance</button>
+                    </div>
+                  </div>
+                </div>
+                <p class="number-center text-muted text-center mb-4">
+                  Please fill in this form to manage your asset.
+                </p>
+                <div class="soft-divider mb-4"></div>
+
+                <div class="mb-4 day-block">
+                  <label class="form-label text-uppercase text-muted"><b>Monday</b></label>
+                  <div class="row align-items-center gy-3 mt-2">
+                    <div class="col-12 col-md-4">
+                      <input
+                        name="Weekend_3_Monday"
+                        type="text"
+                        class="form-control number-input"
+                        placeholder="amount"
+                        required
+                      />
+                    </div>
+
+                    <div
+                      class="col-12 col-md-3 d-flex justify-content-center align-items-center highlight-chip"
+                    >
+                      <span>LEFT</span>
+                    </div>
+
+                    <div class="col-12 col-md-4">
+                      <input
+                        name="Monday_3_left"
+                        type="text"
+                        class="form-control number-input"
+                        placeholder="amount"
+                        required
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="mb-4 day-block">
+                  <label class="form-label text-uppercase text-muted"><b>Tuesday</b></label>
+                  <div class="row align-items-center gy-3 mt-2">
+                    <div class="col-12 col-md-4">
+                      <input
+                        name="Weekend_3_Tuesday"
+                        type="text"
+                        class="form-control number-input"
+                        placeholder="amount"
+                        required
+                      />
+                    </div>
+                    <div
+                      class="col-12 col-md-3 d-flex justify-content-center align-items-center highlight-chip"
+                    >
+                      <span>LEFT</span>
+                    </div>
+                    <div class="col-12 col-md-4">
+                      <input
+                        name="Tuesday_3_left"
+                        type="text"
+                        class="form-control number-input"
+                        placeholder="amount"
+                        required
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="mb-4 day-block">
+                  <label class="form-label text-uppercase text-muted"><b>Wednesday</b></label>
+                  <div class="row align-items-center gy-3 mt-2">
+                    <div class="col-12 col-md-4">
+                      <input
+                        name="Weekend_3_Wednesday"
+                        type="text"
+                        class="form-control number-input bg-light border-primary"
+                        placeholder="amount"
+                        required
+                      />
+                    </div>
+                    <div class="col-12 col-md-2">
+                      <input
+                        name="Wednesday_3_result1"
+                        type="text"
+                        class="form-control number-input bg-light border-primary"
+                        placeholder="amount"
+                        required
+                      />
+                    </div>
+                    <div class="col-12 col-md-2">
+                      <input
+                        name="Wednesday_3_result2"
+                        type="text"
+                        class="form-control number-input bg-light"
+                        placeholder="amount"
+                        required
+                      />
+                    </div>
+                    <div
+                      class="col-12 col-md-1 d-flex justify-content-center align-items-center highlight-chip"
+                    >
+                      <span>LEFT</span>
+                    </div>
+                    <div class="col-12 col-md-2">
+                      <input
+                        name="Wednesday_3_left"
+                        type="text"
+                        class="form-control number-input"
+                        placeholder="amount"
+                        required
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="mb-4 day-block">
+                  <label class="form-label text-uppercase text-muted"><b>Thursday</b></label>
+                  <div class="row align-items-center gy-3 mt-2">
+                    <div class="col-12 col-md-4">
+                      <input
+                        name="Weekend_3_Thursday"
+                        type="text"
+                        class="form-control number-input"
+                        placeholder="amount"
+                        required
+                      />
+                    </div>
+                    <div
+                      class="col-12 col-md-3 d-flex justify-content-center align-items-center highlight-chip"
+                    >
+                      <span>LEFT</span>
+                    </div>
+                    <div class="col-12 col-md-4">
+                      <input
+                        name="Thursday_3_left"
+                        type="text"
+                        class="form-control number-input"
+                        placeholder="amount"
+                        required
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="mb-4 day-block">
+                  <label class="form-label text-uppercase text-muted"><b>Friday</b></label>
+                  <div class="row align-items-center gy-3 mt-2">
+                    <div class="col-12 col-md-4">
+                      <input
+                        name="Weekend_3_Friday"
+                        type="text"
+                        class="form-control number-input"
+                        placeholder="amount"
+                        required
+                      />
+                    </div>
+                    <div
+                      class="col-12 col-md-3 d-flex justify-content-center align-items-center highlight-chip"
+                    >
+                      <span>LEFT</span>
+                    </div>
+                    <div class="col-12 col-md-4">
+                      <input
+                        name="Friday_3_left"
+                        type="text"
+                        class="form-control number-input"
+                        placeholder="amount"
+                        required
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="mb-4 day-block">
+                  <label class="form-label text-uppercase text-muted"><b>Saturday</b></label>
+                  <div class="row align-items-center gy-3 mt-2">
+                    <div class="col-12 col-md-4">
+                      <input
+                        name="Weekend_3_Saturday"
+                        type="text"
+                        class="form-control number-input"
+                        placeholder="amount"
+                        required
+                      />
+                    </div>
+                    <div
+                      class="col-12 col-md-3 d-flex justify-content-center align-items-center highlight-chip"
+                    >
+                      <span>LEFT</span>
+                    </div>
+                    <div class="col-12 col-md-4">
+                      <input
+                        name="Saturday_3_left"
+                        type="text"
+                        class="form-control number-input"
+                        placeholder="amount"
+                        required
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="mb-3 day-block">
+                  <label class="form-label text-uppercase text-muted"><b>Sunday</b></label>
+                  <div class="row align-items-center gy-3 mt-2">
+                    <div class="col-12 col-md-4">
+                      <input
+                        name="Weekend_3_Sunday"
+                        type="text"
+                        class="form-control number-input"
+                        placeholder="amount"
+                        required
+                      />
+                    </div>
+                    <div
+                      class="col-12 col-md-3 d-flex justify-content-center align-items-center highlight-chip"
+                    >
+                      <span>LEFT</span>
+                    </div>
+                    <div class="col-12 col-md-4">
+                      <input
+                        name="Sunday_3_left"
+                        type="text"
+                        class="form-control number-input"
+                        placeholder="amount"
+                        required
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="soft-divider mt-4"></div>
+              </div>
+            </form>
+          </div>
+
+          <!-- Weekend 4 -->
+          <div class="section">
+            <form>
+              <div class="card weekend-card shadow-lg border-0 p-4 p-md-5">
+                <div class="weekend-header-sticky bg-white rounded-4 shadow-sm p-3 p-md-4 mb-4">
+                  <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-2">
+                    <h1 class="number-center mb-0 text-center text-md-start">Weekend 4</h1>
+                    <div class="asset d-flex flex-column flex-md-row align-items-md-center gap-2 mt-3 mt-md-0">
+                      <label class="mb-0 text-uppercase text-muted asset-label" style="width: auto;">Your asset</label>
+                      <input
+                        name="asset4"
+                        type="text"
+                        class="form-control number-input flex-grow-1"
+                        placeholder="amount"
+                        required
+                      />
+                      <button type="button" id="Btn_Manage4" class="btn btn-primary manage-btn">Update balance</button>
+                    </div>
+                  </div>
+                </div>
+                <p class="number-center text-muted text-center mb-4">
+                  Please fill in this form to manage your asset.
+                </p>
+                <div class="soft-divider mb-4"></div>
+
+                <div class="mb-4 day-block">
+                  <label class="form-label text-uppercase text-muted"><b>Monday</b></label>
+                  <div class="row align-items-center gy-3 mt-2">
+                    <div class="col-12 col-md-4">
+                      <input
+                        name="Weekend_4_Monday"
+                        type="text"
+                        class="form-control number-input"
+                        placeholder="amount"
+                        required
+                      />
+                    </div>
+                    <div
+                      class="col-12 col-md-3 d-flex justify-content-center align-items-center highlight-chip"
+                    >
+                      <span>LEFT</span>
+                    </div>
+                    <div class="col-12 col-md-4">
+                      <input
+                        name="Monday_4_left"
+                        type="text"
+                        class="form-control number-input"
+                        placeholder="amount"
+                        required
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="mb-4 day-block">
+                  <label class="form-label text-uppercase text-muted"><b>Tuesday</b></label>
+                  <div class="row align-items-center gy-3 mt-2">
+                    <div class="col-12 col-md-4">
+                      <input
+                        name="Weekend_4_Tuesday"
+                        type="text"
+                        class="form-control number-input bg-light border-primary"
+                        placeholder="amount"
+                        required
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="mb-4 day-block">
+                  <label class="form-label text-uppercase text-muted"><b>Wednesday</b></label>
+                  <div class="row align-items-center gy-3 mt-2">
+                    <div class="col-12 col-md-4">
+                      <input
+                        name="Weekend_4_Wednesday"
+                        type="text"
+                        class="form-control number-input bg-light border-primary"
+                        placeholder="amount"
+                        required
+                      />
+                    </div>
+                    <div class="col-12 col-md-3">
+                      <input
+                        name="Weekend_4_result"
+                        type="text"
+                        class="form-control number-input bg-light"
+                        placeholder="amount"
+                        required
+                      />
+                    </div>
+                    <div
+                      class="col-12 col-md-1 d-flex justify-content-center align-items-center highlight-chip"
+                    >
+                      <span>LEFT</span>
+                    </div>
+                    <div class="col-12 col-md-3">
+                      <input
+                        name="Wednesday_4_left"
+                        type="text"
+                        class="form-control number-input"
+                        placeholder="amount"
+                        required
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="mb-4 day-block">
+                  <label class="form-label text-uppercase text-muted"><b>Thursday</b></label>
+                  <div class="row align-items-center gy-3 mt-2">
+                    <div class="col-12 col-md-4">
+                      <input
+                        name="Weekend_4_Thursday"
+                        type="text"
+                        class="form-control number-input bg-light border-primary"
+                        placeholder="amount"
+                        required
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="mb-4 day-block">
+                  <label class="form-label text-uppercase text-muted"><b>Friday</b></label>
+                  <div class="row align-items-center gy-3 mt-2">
+                    <div class="col-12 col-md-4">
+                      <input
+                        name="Weekend_4_Friday"
+                        type="text"
+                        class="form-control number-input"
+                        placeholder="amount"
+                        required
+                      />
+                    </div>
+                    <div
+                      class="col-12 col-md-3 d-flex justify-content-center align-items-center highlight-chip"
+                    >
+                      <span>LEFT</span>
+                    </div>
+                    <div class="col-12 col-md-4">
+                      <input
+                        name="Friday_4_left"
+                        type="text"
+                        class="form-control number-input"
+                        placeholder="amount"
+                        required
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="mb-4 day-block">
+                  <label class="form-label text-uppercase text-muted"><b>Saturday</b></label>
+                  <div class="row align-items-center gy-3 mt-2">
+                    <div class="col-12 col-md-4">
+                      <input
+                        name="Weekend_4_Saturday"
+                        type="text"
+                        class="form-control number-input"
+                        placeholder="amount"
+                        required
+                      />
+                    </div>
+                    <div
+                      class="col-12 col-md-3 d-flex justify-content-center align-items-center highlight-chip"
+                    >
+                      <span>LEFT</span>
+                    </div>
+                    <div class="col-12 col-md-4">
+                      <input
+                        name="Saturday_4_left"
+                        type="text"
+                        class="form-control number-input"
+                        placeholder="amount"
+                        required
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="mb-3 day-block">
+                  <label class="form-label text-uppercase text-muted"><b>Sunday</b></label>
+                  <div class="row align-items-center gy-3 mt-2">
+                    <div class="col-12 col-md-4">
+                      <input
+                        name="Weekend_4_Sunday"
+                        type="text"
+                        class="form-control number-input"
+                        placeholder="amount"
+                        required
+                      />
+                    </div>
+                    <div
+                      class="col-12 col-md-3 d-flex justify-content-center align-items-center highlight-chip"
+                    >
+                      <span>LEFT</span>
+                    </div>
+                    <div class="col-12 col-md-4">
+                      <input
+                        name="Sunday_4_left"
+                        type="text"
+                        class="form-control number-input"
+                        placeholder="amount"
+                        required
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="soft-divider mt-4"></div>
+              </div>
+            </form>
           </div>
         </div>
       </div>
-
-
-      <!-- Weekend 2 -->
-      <div class="section">
-        <form>
-          <div class="card shadow p-4">
-            <div class="weekend-header-sticky bg-white border-bottom mb-3">
-              <h1 class="number-center mb-4 text-center">Weekend 2</h1>
-              <div class="asset d-flex align-items-center mb-3 gap-2">
-                <label class="mb-0" style="width: 100px;">Your asset</label>
-                <input name="asset2" type="text" class="form-control number-input flex-grow-1" placeholder="amount" required>
-                <button type="button" id="Btn_Manage2" class="btn btn-primary">Click</button>
-              </div>
-            </div>
-            <p class="number-center">Please fill in this form to manage your asset.</p>
-            <hr>
-            <div class="mb-3">
-              <label class="form-label"><b>Monday</b></label>
-              <div class="row align-items-center">
-                <div class="col-12 col-md-4 mb-2 mb-md-0">
-                  <input name="Weekend_2_Monday" type="text" class="form-control number-input" placeholder="amount" required />
-                </div>
-                
-                <div class="col-12 col-md-3 mb-2 mb-md-0 d-flex justify-content-center align-items-center bg-danger number-white text-white">
-                  <span>LEFT</span>
-                </div>                
-                
-                <div class="col-12 col-md-4 mb-2 mb-md-0">
-                  <input name="Monday_2_left" type="text" class="form-control number-input" placeholder="amount" required />
-                </div>
-              </div>
-            </div>
-
-            <div class="mb-3">
-              <label class="form-label"><b>Tuesday</b></label>
-              <div class="row align-items-center">
-                <div class="col-12 col-md-4 mb-2 mb-md-0">
-                  <input name="Weekend_2_Tuesday" type="text" class="form-control number-input" placeholder="amount" required />
-                </div>
-                
-                <div class="col-12 col-md-3 mb-2 mb-md-0 d-flex justify-content-center align-items-center bg-danger number-white text-white">
-                  <span>LEFT</span>
-                </div>                
-                
-                <div class="col-12 col-md-4 mb-2 mb-md-0">
-                  <input name="Tuesday_2_left" type="text" class="form-control number-input" placeholder="amount" required />
-                </div>
-              </div>
-            </div>
-
-            <div class="mb-3">
-              <label class="form-label"><b>Wednesday</b></label>
-              <div class="row align-items-center">
-                <div class="col-12 col-md-4 mb-2 mb-md-0">
-                  <input name="Weekend_2_Wednesday" type="text" class="form-control number-input bg-light border-primary" placeholder="amount" required />
-                </div>
-              </div>
-            </div>
-            
-            <div class="mb-3">
-              <label class="form-label"><b>Thursday</b></label>
-              <div class="row align-items-center">
-                <div class="col-12 col-md-4 mb-2 mb-md-0">
-                  <input name="Weekend_2_Thursday" type="text" class="form-control number-input bg-light border-primary" placeholder="amount" required />
-                </div>
-                <div class="col-12 col-md-3 mb-2 mb-md-0">
-                  <input name="Weekend_2_result" type="text" class="form-control number-input bg-light" placeholder="amount" required />
-                </div>
-                <div class="col-12 col-md-1 mb-2 mb-md-0 d-flex justify-content-center align-items-center bg-danger number-white text-white">
-                  <span>LEFT</span>
-                </div>
-                <div class="col-12 col-md-3 mb-2 mb-md-0">
-                  <input name="Thursday_2_left" type="text" class="form-control number-input" placeholder="amount" required />
-                </div>
-              </div>
-            </div>
-
-            <div class="mb-3">
-              <label class="form-label"><b>Friday</b></label>
-              <div class="row align-items-center">
-                <div class="col-12 col-md-4 mb-2 mb-md-0">
-                  <input name="Weekend_2_Friday" type="text" class="form-control number-input" placeholder="amount" required />
-                </div>
-                
-                <div class="col-12 col-md-3 mb-2 mb-md-0 d-flex justify-content-center align-items-center bg-danger number-white text-white">
-                  <span>LEFT</span>
-                </div>                
-                
-                <div class="col-12 col-md-4 mb-2 mb-md-0">
-                  <input name="Friday_2_left" type="text" class="form-control number-input" placeholder="amount" required />
-                </div>
-              </div>
-            </div>
-
-            <!-- Saturday -->
-            <div class="mb-3">
-              <label class="form-label"><b>Saturday</b></label>
-              <div class="row align-items-center">
-                <div class="col-12 col-md-4 mb-2 mb-md-0">
-                  <input name="Weekend_2_Saturday" type="text" class="form-control number-input" placeholder="amount" required />
-                </div>
-                <div class="col-md-3 mb-2 d-flex justify-content-center align-items-center bg-danger text-white">
-                  <span>LEFT</span>
-                </div>
-                <div class="col-md-4 mb-2">
-                  <input name="Saturday_2_left" type="text" class="form-control number-input" placeholder="amount" required />
-                </div>
-              </div>
-            </div>
-
-            <!-- Sunday -->
-            <div class="mb-3">
-              <label class="form-label"><b>Sunday</b></label>
-              <div class="row align-items-center">
-                <div class="col-12 col-md-4 mb-2 mb-md-0">
-                  <input name="Weekend_2_Sunday" type="text" class="form-control number-input" placeholder="amount" required />
-                </div>
-                <div class="col-md-3 mb-2 d-flex justify-content-center align-items-center bg-danger text-white">
-                  <span>LEFT</span>
-                </div>
-                <div class="col-md-4 mb-2">
-                  <input name="Sunday_2_left" type="text" class="form-control number-input" placeholder="amount" required />
-                </div>
-              </div>
-            </div>
-
-            <hr>
-      
-          </div>
-        </form>
-      </div>
-
-      <!-- Weekend 3 -->
-      <div class="section">
-        <form>
-          <div class="card shadow p-4">
-            <div class="weekend-header-sticky bg-white border-bottom mb-3">
-              <h1 class="number-center mb-4 text-center">Weekend 3</h1>
-              <div class="asset d-flex align-items-center mb-3 gap-2">
-                <label class="mb-0" style="width: 100px;">Your asset</label>
-                <input name="asset3" type="text" class="form-control number-input flex-grow-1" placeholder="amount" required>
-                <button type="button" id="Btn_Manage3" class="btn btn-primary">Click</button>
-              </div>
-            </div>
-            <p class="number-center">Please fill in this form to manage your asset.</p>
-            <hr>
-            <div class="mb-3">
-              <label class="form-label"><b>Monday</b></label>
-              <div class="row align-items-center">
-                <div class="col-12 col-md-4 mb-2 mb-md-0">
-                  <input name="Weekend_3_Monday" type="text" class="form-control number-input" placeholder="amount" required />
-                </div>
-                
-                <div class="col-12 col-md-3 mb-2 mb-md-0 d-flex justify-content-center align-items-center bg-danger number-white text-white">
-                  <span>LEFT</span>
-                </div>                
-                
-                <div class="col-12 col-md-4 mb-2 mb-md-0">
-                  <input name="Monday_3_left" type="text" class="form-control number-input" placeholder="amount" required />
-                </div>
-              </div>
-            </div>
-
-            <div class="mb-3">
-              <label class="form-label"><b>Tuesday</b></label>
-              <div class="row align-items-center">
-                <div class="col-12 col-md-4 mb-2 mb-md-0">
-                  <input name="Weekend_3_Tuesday" type="text" class="form-control number-input" placeholder="amount" required />
-                </div>
-                <div class="col-12 col-md-3 mb-2 mb-md-0 d-flex justify-content-center align-items-center bg-danger number-white text-white">
-                  <span>LEFT</span>
-                </div>                
-                <div class="col-12 col-md-4 mb-2 mb-md-0">
-                  <input name="Tuesday_3_left" type="text" class="form-control number-input" placeholder="amount" required />
-                </div>
-              </div>
-            </div>
-
-            <div class="mb-3">
-              <label class="form-label"><b>Wednesday</b></label>
-              <div class="row align-items-center">
-                <div class="col-12 col-md-4 mb-2 mb-md-0">
-                  <input name="Weekend_3_Wednesday" type="text" class="form-control number-input bg-light border-primary" placeholder="amount" required />
-                </div>
-                <div class="col-12 col-md-2 mb-2 mb-md-0">
-                  <input name="Wednesday_3_result1" type="text" class="form-control number-input bg-light border-primary" placeholder="amount" required />
-                </div>
-                <div class="col-12 col-md-2 mb-2 mb-md-0">
-                  <input name="Wednesday_3_result2" type="text" class="form-control number-input bg-light" placeholder="amount" required />
-                </div>
-                <div class="col-12 col-md-1 mb-2 mb-md-0 d-flex justify-content-center align-items-center bg-danger number-white text-white">
-                  <span>LEFT</span>
-                </div>
-                <div class="col-12 col-md-2 mb-2 mb-md-0">
-                  <input name="Wednesday_3_left" type="text" class="form-control number-input" placeholder="amount" required />
-                </div>
-              </div>
-            </div>
-
-            <div class="mb-3">
-              <label class="form-label"><b>Thursday</b></label>
-              <div class="row align-items-center">
-                <div class="col-12 col-md-4 mb-2 mb-md-0">
-                  <input name="Weekend_3_Thursday" type="text" class="form-control number-input" placeholder="amount" required />
-                </div>
-                <div class="col-12 col-md-3 mb-2 mb-md-0 d-flex justify-content-center align-items-center bg-danger number-white text-white">
-                  <span>LEFT</span>
-                </div>                
-                <div class="col-12 col-md-4 mb-2 mb-md-0">
-                  <input name="Thursday_3_left" type="text" class="form-control number-input" placeholder="amount" required />
-                </div>
-              </div>
-            </div>
-
-            <div class="mb-3">
-              <label class="form-label"><b>Friday</b></label>
-              <div class="row align-items-center">
-                <div class="col-12 col-md-4 mb-2 mb-md-0">
-                  <input name="Weekend_3_Friday" type="text" class="form-control number-input" placeholder="amount" required />
-                </div>
-                <div class="col-12 col-md-3 mb-2 mb-md-0 d-flex justify-content-center align-items-center bg-danger number-white text-white">
-                  <span>LEFT</span>
-                </div>
-                <div class="col-12 col-md-4 mb-2 mb-md-0">
-                  <input name="Friday_3_left" type="text" class="form-control number-input" placeholder="amount" required />
-                </div>
-              </div>
-            </div>
-            
-            <!-- Saturday -->
-            <div class="mb-3">
-              <label class="form-label"><b>Saturday</b></label>
-              <div class="row align-items-center">
-                <div class="col-12 col-md-4 mb-2 mb-md-0">
-                  <input name="Weekend_3_Saturday" type="text" class="form-control number-input" placeholder="amount" required />
-                </div>
-                <div class="col-md-3 mb-2 d-flex justify-content-center align-items-center bg-danger text-white">
-                  <span>LEFT</span>
-                </div>
-                <div class="col-md-4 mb-2">
-                  <input name="Saturday_3_left" type="text" class="form-control number-input" placeholder="amount" required />
-                </div>
-              </div>
-            </div>
-
-            <!-- Sunday -->
-            <div class="mb-3">
-              <label class="form-label"><b>Sunday</b></label>
-              <div class="row align-items-center">
-                <div class="col-12 col-md-4 mb-2 mb-md-0">
-                  <input name="Weekend_3_Sunday" type="text" class="form-control number-input" placeholder="amount" required />
-                </div>
-                <div class="col-md-3 mb-2 d-flex justify-content-center align-items-center bg-danger text-white">
-                  <span>LEFT</span>
-                </div>
-                <div class="col-md-4 mb-2">
-                  <input name="Sunday_3_left" type="text" class="form-control number-input" placeholder="amount" required />
-                </div>
-              </div>
-            </div>
-
-            <hr>
-        
-          </div>
-        </form>
-      </div>
-
-      <!-- Weekend 4 -->
-      <div class="section">
-        <form>
-          <div class="card shadow p-4">
-            <div class="weekend-header-sticky bg-white border-bottom mb-3">
-              <h1 class="number-center mb-4 text-center">Weekend 4</h1>
-              <div class="asset d-flex align-items-center mb-3 gap-2">
-                <label class="mb-0" style="width: 100px;">Your asset</label>
-                <input name="asset4" type="text" class="form-control number-input flex-grow-1" placeholder="amount" required>
-                <button type="button" id="Btn_Manage4" class="btn btn-primary">Click</button>
-              </div>
-            </div>
-            <p class="number-center">Please fill in this form to manage your asset.</p>
-
-            <hr>
-
-            <div class="mb-3">
-              <label class="form-label"><b>Monday</b></label>
-              <div class="row align-items-center">
-                <div class="col-12 col-md-4 mb-2 mb-md-0">
-                  <input name="Weekend_4_Monday" type="text" class="form-control number-input" placeholder="amount" required />
-                </div>
-                <div class="col-12 col-md-3 mb-2 mb-md-0 d-flex justify-content-center align-items-center bg-danger number-white text-white">
-                  <span>LEFT</span>
-                </div>                
-                <div class="col-12 col-md-4 mb-2 mb-md-0">
-                  <input name="Monday_4_left" type="text" class="form-control number-input" placeholder="amount" required />
-                </div>
-              </div>
-            </div>
-
-            <div class="mb-3">
-              <label class="form-label"><b>Tuesday</b></label>
-              <div class="row align-items-center">
-                <div class="col-12 col-md-4 mb-2 mb-md-0">
-                  <input name="Weekend_4_Tuesday" type="text" class="form-control number-input bg-light border-primary" placeholder="amount" required />
-                </div>
-              </div>
-            </div>
-
-            <div class="mb-3">
-              <label class="form-label"><b>Wednesday</b></label>
-              <div class="row align-items-center">
-                <div class="col-12 col-md-4 mb-2 mb-md-0">
-                  <input name="Weekend_4_Wednesday" type="text" class="form-control number-input bg-light border-primary" placeholder="amount" required />
-                </div>
-                <div class="col-12 col-md-3 mb-2 mb-md-0">
-                  <input name="Weekend_4_result" type="text" class="form-control number-input bg-light" placeholder="amount" required />
-                </div>
-                <div class="col-12 col-md-1 mb-2 mb-md-0 d-flex justify-content-center align-items-center bg-danger number-white text-white">
-                  <span>LEFT</span>
-                </div>
-                <div class="col-12 col-md-3 mb-2 mb-md-0">
-                  <input name="Wednesday_4_left" type="text" class="form-control number-input" placeholder="amount" required />
-                </div>
-              </div>
-            </div>
-
-            <div class="mb-3">
-              <label class="form-label"><b>Thursday</b></label>
-              <div class="row align-items-center">
-                <div class="col-12 col-md-4 mb-2 mb-md-0">
-                  <input name="Weekend_4_Thursday" type="text" class="form-control number-input bg-light border-primary" placeholder="amount" required />
-                </div>
-              </div>
-            </div>
-
-            <div class="mb-3">
-              <label class="form-label"><b>Friday</b></label>
-              <div class="row align-items-center">
-                <div class="col-12 col-md-4 mb-2 mb-md-0">
-                  <input name="Weekend_4_Friday" type="text" class="form-control number-input" placeholder="amount" required />
-                </div>
-                <div class="col-12 col-md-3 mb-2 mb-md-0 d-flex justify-content-center align-items-center bg-danger number-white text-white">
-                  <span>LEFT</span>
-                </div>
-                <div class="col-12 col-md-4 mb-2 mb-md-0">
-                  <input name="Friday_4_left" type="text" class="form-control number-input" placeholder="amount" required />
-                </div>
-              </div>
-            </div>
-
-            <!-- Saturday -->
-            <div class="mb-3">
-              <label class="form-label"><b>Saturday</b></label>
-              <div class="row align-items-center">
-                <div class="col-12 col-md-4 mb-2 mb-md-0">
-                  <input name="Weekend_4_Saturday" type="text" class="form-control number-input" placeholder="amount" required />
-                </div>
-                <div class="col-md-3 mb-2 d-flex justify-content-center align-items-center bg-danger text-white">
-                  <span>LEFT</span>
-                </div>
-                <div class="col-md-4 mb-2">
-                  <input name="Saturday_4_left" type="text" class="form-control number-input" placeholder="amount" required />
-                </div>
-              </div>
-            </div>
-
-            <!-- Sunday -->
-            <div class="mb-3">
-              <label class="form-label"><b>Sunday</b></label>
-              <div class="row align-items-center">
-                <div class="col-12 col-md-4 mb-2 mb-md-0">
-                  <input name="Weekend_4_Sunday" type="text" class="form-control number-input" placeholder="amount" required />
-                </div>
-                <div class="col-md-3 mb-2 d-flex justify-content-center align-items-center bg-danger text-white">
-                  <span>LEFT</span>
-                </div>
-                <div class="col-md-4 mb-2">
-                  <input name="Sunday_4_left" type="text" class="form-control number-input" placeholder="amount" required />
-                </div>
-              </div>
-            </div>
-
-            <hr>
-
-          </div>
-        </form>
-      </div>
-    </div>
+    </main>
   </div>
 
   <script src="myscripts.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
-
 </body>
 </html>
