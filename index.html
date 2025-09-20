@@ -125,6 +125,7 @@
                     <button
                       type="button"
                       class="btn btn-outline-primary btn-sm day-modal-trigger"
+                      data-weekend="1"
                       data-day="Monday"
                     >
                       ຄິດໄລ່ເງີນ
@@ -154,6 +155,7 @@
                     <button
                       type="button"
                       class="btn btn-outline-primary btn-sm day-modal-trigger"
+                      data-weekend="1"
                       data-day="Tuesday"
                     >
                       ຄິດໄລ່ເງີນ
@@ -182,6 +184,7 @@
                     <button
                       type="button"
                       class="btn btn-outline-primary btn-sm day-modal-trigger"
+                      data-weekend="1"
                       data-day="Wednesday"
                     >
                       ຄິດໄລ່ເງີນ
@@ -210,6 +213,7 @@
                     <button
                       type="button"
                       class="btn btn-outline-primary btn-sm day-modal-trigger"
+                      data-weekend="1"
                       data-day="Thursday"
                     >
                       ຄິດໄລ່ເງີນ
@@ -238,6 +242,7 @@
                     <button
                       type="button"
                       class="btn btn-outline-primary btn-sm day-modal-trigger"
+                      data-weekend="1"
                       data-day="Friday"
                     >
                       ຄິດໄລ່ເງີນ
@@ -266,6 +271,7 @@
                     <button
                       type="button"
                       class="btn btn-outline-primary btn-sm day-modal-trigger"
+                      data-weekend="1"
                       data-day="Saturday"
                     >
                       ຄິດໄລ່ເງີນ
@@ -294,6 +300,7 @@
                     <button
                       type="button"
                       class="btn btn-outline-primary btn-sm day-modal-trigger"
+                      data-weekend="1"
                       data-day="Sunday"
                     >
                       ຄິດໄລ່ເງີນ
@@ -320,7 +327,7 @@
             </form>
           </div>
 
-          <!-- Day modal reused for all days in Weekend 1 -->
+          <!-- Day modal reused for all weekends -->
           <div class="modal fade" id="dayModal" tabindex="-1" aria-labelledby="dayModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-lg">
               <div class="modal-content day-modal">
@@ -363,90 +370,100 @@
                 <div class="weekend-header-sticky bg-white rounded-4 shadow-sm p-3 p-md-4 mb-4">
                   <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-2">
                     <h1 class="number-center mb-0 text-center text-md-start">Weekend 2</h1>
-                    <div class="asset d-flex flex-column flex-md-row align-items-md-center gap-2 mt-3 mt-md-0">
-                      <label class="mb-0 text-uppercase text-muted asset-label" style="width: auto;">Your asset</label>
-                      <input
-                        name="asset2"
-                        type="text"
-                        class="form-control number-input flex-grow-1"
-                        placeholder="amount"
-                        required
-                      />
-                      <button type="button" id="Btn_Manage2" class="btn btn-primary manage-btn">Update balance</button>
-                    </div>
+                    <p id="Weekend2_Final_Remaining" class="fw-bold text-success mb-0">Remaining: 0</p>
+                  </div>
+                  <div class="asset d-flex flex-column flex-md-row align-items-md-center gap-2 mt-3">
+                    <label class="mb-0 text-uppercase text-muted asset-label" style="width: auto;">Your asset</label>
+                    <input
+                      name="asset2"
+                      type="text"
+                      class="form-control number-input flex-grow-1"
+                      placeholder="amount"
+                      required
+                    />
+                    <button type="button" id="Btn_Manage2" class="btn btn-primary manage-btn">Update balance</button>
                   </div>
                 </div>
+
                 <p class="number-center text-muted text-center mb-4">
                   Please fill in this form to manage your asset.
                 </p>
                 <div class="soft-divider mb-4"></div>
 
+                <!-- Monday -->
                 <div class="mb-4 day-block">
-                  <label class="form-label text-uppercase text-muted"><b>Monday</b></label>
-                  <div class="row align-items-center gy-3 mt-2">
-                    <div class="col-12 col-md-4">
+                  <div class="day-header">
+                    <label class="form-label mb-0"><b>Monday</b></label>
+                    <button
+                      type="button"
+                      class="btn btn-outline-primary btn-sm day-modal-trigger"
+                      data-weekend="2"
+                      data-day="Monday"
+                    >
+                      ຄິດໄລ່ເງີນ
+                    </button>
+                  </div>
+
+                  <div class="row align-items-center mt-3 gy-2">
+                    <div class="col-12">
                       <input
                         name="Weekend_2_Monday"
                         type="text"
                         class="form-control number-input"
-                        placeholder="amount"
+                        placeholder="Paid total"
                         required
                       />
                     </div>
-
-                    <div
-                      class="col-12 col-md-3 d-flex justify-content-center align-items-center highlight-chip"
-                    >
-                      <span>LEFT</span>
-                    </div>
-
-                    <div class="col-12 col-md-4">
-                      <input
-                        name="Monday_2_left"
-                        type="text"
-                        class="form-control number-input"
-                        placeholder="amount"
-                        required
-                      />
+                    <div class="col-12">
+                      <p id="Monday_2_addTotal" class="fw-bold text-success">Remaining: 0</p>
                     </div>
                   </div>
                 </div>
 
+                <!-- Tuesday -->
                 <div class="mb-4 day-block">
-                  <label class="form-label text-uppercase text-muted"><b>Tuesday</b></label>
-                  <div class="row align-items-center gy-3 mt-2">
-                    <div class="col-12 col-md-4">
+                  <div class="day-header">
+                    <label class="form-label mb-0"><b>Tuesday</b></label>
+                    <button
+                      type="button"
+                      class="btn btn-outline-primary btn-sm day-modal-trigger"
+                      data-weekend="2"
+                      data-day="Tuesday"
+                    >
+                      ຄິດໄລ່ເງີນ
+                    </button>
+                  </div>
+                  <div class="row align-items-center mt-3 gy-2">
+                    <div class="col-12">
                       <input
                         name="Weekend_2_Tuesday"
                         type="text"
-                        class="form-control number-input"
+                        class="form-control number-input bg-light border-primary"
                         placeholder="amount"
                         required
                       />
                     </div>
-
-                    <div
-                      class="col-12 col-md-3 d-flex justify-content-center align-items-center highlight-chip"
-                    >
-                      <span>LEFT</span>
-                    </div>
-
-                    <div class="col-12 col-md-4">
-                      <input
-                        name="Tuesday_2_left"
-                        type="text"
-                        class="form-control number-input"
-                        placeholder="amount"
-                        required
-                      />
+                    <div class="col-12">
+                      <p id="Tuesday_2_addTotal" class="fw-bold text-success">Remaining: 0</p>
                     </div>
                   </div>
                 </div>
 
+                <!-- Wednesday -->
                 <div class="mb-4 day-block">
-                  <label class="form-label text-uppercase text-muted"><b>Wednesday</b></label>
-                  <div class="row align-items-center gy-3 mt-2">
-                    <div class="col-12 col-md-4">
+                  <div class="day-header">
+                    <label class="form-label mb-0"><b>Wednesday</b></label>
+                    <button
+                      type="button"
+                      class="btn btn-outline-primary btn-sm day-modal-trigger"
+                      data-weekend="2"
+                      data-day="Wednesday"
+                    >
+                      ຄິດໄລ່ເງີນ
+                    </button>
+                  </div>
+                  <div class="row align-items-center mt-3 gy-2">
+                    <div class="col-12">
                       <input
                         name="Weekend_2_Wednesday"
                         type="text"
@@ -455,13 +472,27 @@
                         required
                       />
                     </div>
+                    <div class="col-12">
+                      <p id="Wednesday_2_addTotal" class="fw-bold text-success">Remaining: 0</p>
+                    </div>
                   </div>
                 </div>
 
+                <!-- Thursday -->
                 <div class="mb-4 day-block">
-                  <label class="form-label text-uppercase text-muted"><b>Thursday</b></label>
-                  <div class="row align-items-center gy-3 mt-2">
-                    <div class="col-12 col-md-4">
+                  <div class="day-header">
+                    <label class="form-label mb-0"><b>Thursday</b></label>
+                    <button
+                      type="button"
+                      class="btn btn-outline-primary btn-sm day-modal-trigger"
+                      data-weekend="2"
+                      data-day="Thursday"
+                    >
+                      ຄິດໄລ່ເງີນ
+                    </button>
+                  </div>
+                  <div class="row align-items-center mt-3 gy-2">
+                    <div class="col-12">
                       <input
                         name="Weekend_2_Thursday"
                         type="text"
@@ -470,36 +501,27 @@
                         required
                       />
                     </div>
-                    <div class="col-12 col-md-3">
-                      <input
-                        name="Weekend_2_result"
-                        type="text"
-                        class="form-control number-input bg-light"
-                        placeholder="amount"
-                        required
-                      />
-                    </div>
-                    <div
-                      class="col-12 col-md-1 d-flex justify-content-center align-items-center highlight-chip"
-                    >
-                      <span>LEFT</span>
-                    </div>
-                    <div class="col-12 col-md-3">
-                      <input
-                        name="Thursday_2_left"
-                        type="text"
-                        class="form-control number-input"
-                        placeholder="amount"
-                        required
-                      />
+                    <div class="col-12">
+                      <p id="Thursday_2_addTotal" class="fw-bold text-success">Remaining: 0</p>
                     </div>
                   </div>
                 </div>
 
+                <!-- Friday -->
                 <div class="mb-4 day-block">
-                  <label class="form-label text-uppercase text-muted"><b>Friday</b></label>
-                  <div class="row align-items-center gy-3 mt-2">
-                    <div class="col-12 col-md-4">
+                  <div class="day-header">
+                    <label class="form-label mb-0"><b>Friday</b></label>
+                    <button
+                      type="button"
+                      class="btn btn-outline-primary btn-sm day-modal-trigger"
+                      data-weekend="2"
+                      data-day="Friday"
+                    >
+                      ຄິດໄລ່ເງີນ
+                    </button>
+                  </div>
+                  <div class="row align-items-center mt-3 gy-2">
+                    <div class="col-12">
                       <input
                         name="Weekend_2_Friday"
                         type="text"
@@ -508,29 +530,27 @@
                         required
                       />
                     </div>
-
-                    <div
-                      class="col-12 col-md-3 d-flex justify-content-center align-items-center highlight-chip"
-                    >
-                      <span>LEFT</span>
-                    </div>
-
-                    <div class="col-12 col-md-4">
-                      <input
-                        name="Friday_2_left"
-                        type="text"
-                        class="form-control number-input"
-                        placeholder="amount"
-                        required
-                      />
+                    <div class="col-12">
+                      <p id="Friday_2_addTotal" class="fw-bold text-success">Remaining: 0</p>
                     </div>
                   </div>
                 </div>
 
+                <!-- Saturday -->
                 <div class="mb-4 day-block">
-                  <label class="form-label text-uppercase text-muted"><b>Saturday</b></label>
-                  <div class="row align-items-center gy-3 mt-2">
-                    <div class="col-12 col-md-4">
+                  <div class="day-header">
+                    <label class="form-label mb-0"><b>Saturday</b></label>
+                    <button
+                      type="button"
+                      class="btn btn-outline-primary btn-sm day-modal-trigger"
+                      data-weekend="2"
+                      data-day="Saturday"
+                    >
+                      ຄິດໄລ່ເງີນ
+                    </button>
+                  </div>
+                  <div class="row align-items-center mt-3 gy-2">
+                    <div class="col-12">
                       <input
                         name="Weekend_2_Saturday"
                         type="text"
@@ -539,27 +559,27 @@
                         required
                       />
                     </div>
-                    <div
-                      class="col-12 col-md-3 d-flex justify-content-center align-items-center highlight-chip"
-                    >
-                      <span>LEFT</span>
-                    </div>
-                    <div class="col-12 col-md-4">
-                      <input
-                        name="Saturday_2_left"
-                        type="text"
-                        class="form-control number-input"
-                        placeholder="amount"
-                        required
-                      />
+                    <div class="col-12">
+                      <p id="Saturday_2_addTotal" class="fw-bold text-success">Remaining: 0</p>
                     </div>
                   </div>
                 </div>
 
+                <!-- Sunday -->
                 <div class="mb-3 day-block">
-                  <label class="form-label text-uppercase text-muted"><b>Sunday</b></label>
-                  <div class="row align-items-center gy-3 mt-2">
-                    <div class="col-12 col-md-4">
+                  <div class="day-header">
+                    <label class="form-label mb-0"><b>Sunday</b></label>
+                    <button
+                      type="button"
+                      class="btn btn-outline-primary btn-sm day-modal-trigger"
+                      data-weekend="2"
+                      data-day="Sunday"
+                    >
+                      ຄິດໄລ່ເງີນ
+                    </button>
+                  </div>
+                  <div class="row align-items-center mt-3 gy-2">
+                    <div class="col-12">
                       <input
                         name="Weekend_2_Sunday"
                         type="text"
@@ -568,19 +588,8 @@
                         required
                       />
                     </div>
-                    <div
-                      class="col-12 col-md-3 d-flex justify-content-center align-items-center highlight-chip"
-                    >
-                      <span>LEFT</span>
-                    </div>
-                    <div class="col-12 col-md-4">
-                      <input
-                        name="Sunday_2_left"
-                        type="text"
-                        class="form-control number-input"
-                        placeholder="amount"
-                        required
-                      />
+                    <div class="col-12">
+                      <p id="Sunday_2_addTotal" class="fw-bold text-success">Remaining: 0</p>
                     </div>
                   </div>
                 </div>
@@ -597,88 +606,100 @@
                 <div class="weekend-header-sticky bg-white rounded-4 shadow-sm p-3 p-md-4 mb-4">
                   <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-2">
                     <h1 class="number-center mb-0 text-center text-md-start">Weekend 3</h1>
-                    <div class="asset d-flex flex-column flex-md-row align-items-md-center gap-2 mt-3 mt-md-0">
-                      <label class="mb-0 text-uppercase text-muted asset-label" style="width: auto;">Your asset</label>
-                      <input
-                        name="asset3"
-                        type="text"
-                        class="form-control number-input flex-grow-1"
-                        placeholder="amount"
-                        required
-                      />
-                      <button type="button" id="Btn_Manage3" class="btn btn-primary manage-btn">Update balance</button>
-                    </div>
+                    <p id="Weekend3_Final_Remaining" class="fw-bold text-success mb-0">Remaining: 0</p>
+                  </div>
+                  <div class="asset d-flex flex-column flex-md-row align-items-md-center gap-2 mt-3">
+                    <label class="mb-0 text-uppercase text-muted asset-label" style="width: auto;">Your asset</label>
+                    <input
+                      name="asset3"
+                      type="text"
+                      class="form-control number-input flex-grow-1"
+                      placeholder="amount"
+                      required
+                    />
+                    <button type="button" id="Btn_Manage3" class="btn btn-primary manage-btn">Update balance</button>
                   </div>
                 </div>
+
                 <p class="number-center text-muted text-center mb-4">
                   Please fill in this form to manage your asset.
                 </p>
                 <div class="soft-divider mb-4"></div>
 
+                <!-- Monday -->
                 <div class="mb-4 day-block">
-                  <label class="form-label text-uppercase text-muted"><b>Monday</b></label>
-                  <div class="row align-items-center gy-3 mt-2">
-                    <div class="col-12 col-md-4">
+                  <div class="day-header">
+                    <label class="form-label mb-0"><b>Monday</b></label>
+                    <button
+                      type="button"
+                      class="btn btn-outline-primary btn-sm day-modal-trigger"
+                      data-weekend="3"
+                      data-day="Monday"
+                    >
+                      ຄິດໄລ່ເງີນ
+                    </button>
+                  </div>
+
+                  <div class="row align-items-center mt-3 gy-2">
+                    <div class="col-12">
                       <input
                         name="Weekend_3_Monday"
                         type="text"
                         class="form-control number-input"
-                        placeholder="amount"
+                        placeholder="Paid total"
                         required
                       />
                     </div>
-
-                    <div
-                      class="col-12 col-md-3 d-flex justify-content-center align-items-center highlight-chip"
-                    >
-                      <span>LEFT</span>
-                    </div>
-
-                    <div class="col-12 col-md-4">
-                      <input
-                        name="Monday_3_left"
-                        type="text"
-                        class="form-control number-input"
-                        placeholder="amount"
-                        required
-                      />
+                    <div class="col-12">
+                      <p id="Monday_3_addTotal" class="fw-bold text-success">Remaining: 0</p>
                     </div>
                   </div>
                 </div>
 
+                <!-- Tuesday -->
                 <div class="mb-4 day-block">
-                  <label class="form-label text-uppercase text-muted"><b>Tuesday</b></label>
-                  <div class="row align-items-center gy-3 mt-2">
-                    <div class="col-12 col-md-4">
+                  <div class="day-header">
+                    <label class="form-label mb-0"><b>Tuesday</b></label>
+                    <button
+                      type="button"
+                      class="btn btn-outline-primary btn-sm day-modal-trigger"
+                      data-weekend="3"
+                      data-day="Tuesday"
+                    >
+                      ຄິດໄລ່ເງີນ
+                    </button>
+                  </div>
+                  <div class="row align-items-center mt-3 gy-2">
+                    <div class="col-12">
                       <input
                         name="Weekend_3_Tuesday"
                         type="text"
-                        class="form-control number-input"
+                        class="form-control number-input bg-light border-primary"
                         placeholder="amount"
                         required
                       />
                     </div>
-                    <div
-                      class="col-12 col-md-3 d-flex justify-content-center align-items-center highlight-chip"
-                    >
-                      <span>LEFT</span>
-                    </div>
-                    <div class="col-12 col-md-4">
-                      <input
-                        name="Tuesday_3_left"
-                        type="text"
-                        class="form-control number-input"
-                        placeholder="amount"
-                        required
-                      />
+                    <div class="col-12">
+                      <p id="Tuesday_3_addTotal" class="fw-bold text-success">Remaining: 0</p>
                     </div>
                   </div>
                 </div>
 
+                <!-- Wednesday -->
                 <div class="mb-4 day-block">
-                  <label class="form-label text-uppercase text-muted"><b>Wednesday</b></label>
-                  <div class="row align-items-center gy-3 mt-2">
-                    <div class="col-12 col-md-4">
+                  <div class="day-header">
+                    <label class="form-label mb-0"><b>Wednesday</b></label>
+                    <button
+                      type="button"
+                      class="btn btn-outline-primary btn-sm day-modal-trigger"
+                      data-weekend="3"
+                      data-day="Wednesday"
+                    >
+                      ຄິດໄລ່ເງີນ
+                    </button>
+                  </div>
+                  <div class="row align-items-center mt-3 gy-2">
+                    <div class="col-12">
                       <input
                         name="Weekend_3_Wednesday"
                         type="text"
@@ -687,74 +708,56 @@
                         required
                       />
                     </div>
-                    <div class="col-12 col-md-2">
+                    <div class="col-12">
+                      <p id="Wednesday_3_addTotal" class="fw-bold text-success">Remaining: 0</p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Thursday -->
+                <div class="mb-4 day-block">
+                  <div class="day-header">
+                    <label class="form-label mb-0"><b>Thursday</b></label>
+                    <button
+                      type="button"
+                      class="btn btn-outline-primary btn-sm day-modal-trigger"
+                      data-weekend="3"
+                      data-day="Thursday"
+                    >
+                      ຄິດໄລ່ເງີນ
+                    </button>
+                  </div>
+                  <div class="row align-items-center mt-3 gy-2">
+                    <div class="col-12">
                       <input
-                        name="Wednesday_3_result1"
+                        name="Weekend_3_Thursday"
                         type="text"
                         class="form-control number-input bg-light border-primary"
                         placeholder="amount"
                         required
                       />
                     </div>
-                    <div class="col-12 col-md-2">
-                      <input
-                        name="Wednesday_3_result2"
-                        type="text"
-                        class="form-control number-input bg-light"
-                        placeholder="amount"
-                        required
-                      />
-                    </div>
-                    <div
-                      class="col-12 col-md-1 d-flex justify-content-center align-items-center highlight-chip"
-                    >
-                      <span>LEFT</span>
-                    </div>
-                    <div class="col-12 col-md-2">
-                      <input
-                        name="Wednesday_3_left"
-                        type="text"
-                        class="form-control number-input"
-                        placeholder="amount"
-                        required
-                      />
+                    <div class="col-12">
+                      <p id="Thursday_3_addTotal" class="fw-bold text-success">Remaining: 0</p>
                     </div>
                   </div>
                 </div>
 
+                <!-- Friday -->
                 <div class="mb-4 day-block">
-                  <label class="form-label text-uppercase text-muted"><b>Thursday</b></label>
-                  <div class="row align-items-center gy-3 mt-2">
-                    <div class="col-12 col-md-4">
-                      <input
-                        name="Weekend_3_Thursday"
-                        type="text"
-                        class="form-control number-input"
-                        placeholder="amount"
-                        required
-                      />
-                    </div>
-                    <div
-                      class="col-12 col-md-3 d-flex justify-content-center align-items-center highlight-chip"
+                  <div class="day-header">
+                    <label class="form-label mb-0"><b>Friday</b></label>
+                    <button
+                      type="button"
+                      class="btn btn-outline-primary btn-sm day-modal-trigger"
+                      data-weekend="3"
+                      data-day="Friday"
                     >
-                      <span>LEFT</span>
-                    </div>
-                    <div class="col-12 col-md-4">
-                      <input
-                        name="Thursday_3_left"
-                        type="text"
-                        class="form-control number-input"
-                        placeholder="amount"
-                        required
-                      />
-                    </div>
+                      ຄິດໄລ່ເງີນ
+                    </button>
                   </div>
-                </div>
-
-                <div class="mb-4 day-block">
-                  <label class="form-label text-uppercase text-muted"><b>Friday</b></label>
-                  <div class="row align-items-center gy-3 mt-2">
-                    <div class="col-12 col-md-4">
+                  <div class="row align-items-center mt-3 gy-2">
+                    <div class="col-12">
                       <input
                         name="Weekend_3_Friday"
                         type="text"
@@ -763,27 +766,27 @@
                         required
                       />
                     </div>
-                    <div
-                      class="col-12 col-md-3 d-flex justify-content-center align-items-center highlight-chip"
-                    >
-                      <span>LEFT</span>
-                    </div>
-                    <div class="col-12 col-md-4">
-                      <input
-                        name="Friday_3_left"
-                        type="text"
-                        class="form-control number-input"
-                        placeholder="amount"
-                        required
-                      />
+                    <div class="col-12">
+                      <p id="Friday_3_addTotal" class="fw-bold text-success">Remaining: 0</p>
                     </div>
                   </div>
                 </div>
 
+                <!-- Saturday -->
                 <div class="mb-4 day-block">
-                  <label class="form-label text-uppercase text-muted"><b>Saturday</b></label>
-                  <div class="row align-items-center gy-3 mt-2">
-                    <div class="col-12 col-md-4">
+                  <div class="day-header">
+                    <label class="form-label mb-0"><b>Saturday</b></label>
+                    <button
+                      type="button"
+                      class="btn btn-outline-primary btn-sm day-modal-trigger"
+                      data-weekend="3"
+                      data-day="Saturday"
+                    >
+                      ຄິດໄລ່ເງີນ
+                    </button>
+                  </div>
+                  <div class="row align-items-center mt-3 gy-2">
+                    <div class="col-12">
                       <input
                         name="Weekend_3_Saturday"
                         type="text"
@@ -792,27 +795,27 @@
                         required
                       />
                     </div>
-                    <div
-                      class="col-12 col-md-3 d-flex justify-content-center align-items-center highlight-chip"
-                    >
-                      <span>LEFT</span>
-                    </div>
-                    <div class="col-12 col-md-4">
-                      <input
-                        name="Saturday_3_left"
-                        type="text"
-                        class="form-control number-input"
-                        placeholder="amount"
-                        required
-                      />
+                    <div class="col-12">
+                      <p id="Saturday_3_addTotal" class="fw-bold text-success">Remaining: 0</p>
                     </div>
                   </div>
                 </div>
 
+                <!-- Sunday -->
                 <div class="mb-3 day-block">
-                  <label class="form-label text-uppercase text-muted"><b>Sunday</b></label>
-                  <div class="row align-items-center gy-3 mt-2">
-                    <div class="col-12 col-md-4">
+                  <div class="day-header">
+                    <label class="form-label mb-0"><b>Sunday</b></label>
+                    <button
+                      type="button"
+                      class="btn btn-outline-primary btn-sm day-modal-trigger"
+                      data-weekend="3"
+                      data-day="Sunday"
+                    >
+                      ຄິດໄລ່ເງີນ
+                    </button>
+                  </div>
+                  <div class="row align-items-center mt-3 gy-2">
+                    <div class="col-12">
                       <input
                         name="Weekend_3_Sunday"
                         type="text"
@@ -821,19 +824,8 @@
                         required
                       />
                     </div>
-                    <div
-                      class="col-12 col-md-3 d-flex justify-content-center align-items-center highlight-chip"
-                    >
-                      <span>LEFT</span>
-                    </div>
-                    <div class="col-12 col-md-4">
-                      <input
-                        name="Sunday_3_left"
-                        type="text"
-                        class="form-control number-input"
-                        placeholder="amount"
-                        required
-                      />
+                    <div class="col-12">
+                      <p id="Sunday_3_addTotal" class="fw-bold text-success">Remaining: 0</p>
                     </div>
                   </div>
                 </div>
@@ -850,57 +842,71 @@
                 <div class="weekend-header-sticky bg-white rounded-4 shadow-sm p-3 p-md-4 mb-4">
                   <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-2">
                     <h1 class="number-center mb-0 text-center text-md-start">Weekend 4</h1>
-                    <div class="asset d-flex flex-column flex-md-row align-items-md-center gap-2 mt-3 mt-md-0">
-                      <label class="mb-0 text-uppercase text-muted asset-label" style="width: auto;">Your asset</label>
-                      <input
-                        name="asset4"
-                        type="text"
-                        class="form-control number-input flex-grow-1"
-                        placeholder="amount"
-                        required
-                      />
-                      <button type="button" id="Btn_Manage4" class="btn btn-primary manage-btn">Update balance</button>
-                    </div>
+                    <p id="Weekend4_Final_Remaining" class="fw-bold text-success mb-0">Remaining: 0</p>
+                  </div>
+                  <div class="asset d-flex flex-column flex-md-row align-items-md-center gap-2 mt-3">
+                    <label class="mb-0 text-uppercase text-muted asset-label" style="width: auto;">Your asset</label>
+                    <input
+                      name="asset4"
+                      type="text"
+                      class="form-control number-input flex-grow-1"
+                      placeholder="amount"
+                      required
+                    />
+                    <button type="button" id="Btn_Manage4" class="btn btn-primary manage-btn">Update balance</button>
                   </div>
                 </div>
+
                 <p class="number-center text-muted text-center mb-4">
                   Please fill in this form to manage your asset.
                 </p>
                 <div class="soft-divider mb-4"></div>
 
+                <!-- Monday -->
                 <div class="mb-4 day-block">
-                  <label class="form-label text-uppercase text-muted"><b>Monday</b></label>
-                  <div class="row align-items-center gy-3 mt-2">
-                    <div class="col-12 col-md-4">
+                  <div class="day-header">
+                    <label class="form-label mb-0"><b>Monday</b></label>
+                    <button
+                      type="button"
+                      class="btn btn-outline-primary btn-sm day-modal-trigger"
+                      data-weekend="4"
+                      data-day="Monday"
+                    >
+                      ຄິດໄລ່ເງີນ
+                    </button>
+                  </div>
+
+                  <div class="row align-items-center mt-3 gy-2">
+                    <div class="col-12">
                       <input
                         name="Weekend_4_Monday"
                         type="text"
                         class="form-control number-input"
-                        placeholder="amount"
+                        placeholder="Paid total"
                         required
                       />
                     </div>
-                    <div
-                      class="col-12 col-md-3 d-flex justify-content-center align-items-center highlight-chip"
-                    >
-                      <span>LEFT</span>
-                    </div>
-                    <div class="col-12 col-md-4">
-                      <input
-                        name="Monday_4_left"
-                        type="text"
-                        class="form-control number-input"
-                        placeholder="amount"
-                        required
-                      />
+                    <div class="col-12">
+                      <p id="Monday_4_addTotal" class="fw-bold text-success">Remaining: 0</p>
                     </div>
                   </div>
                 </div>
 
+                <!-- Tuesday -->
                 <div class="mb-4 day-block">
-                  <label class="form-label text-uppercase text-muted"><b>Tuesday</b></label>
-                  <div class="row align-items-center gy-3 mt-2">
-                    <div class="col-12 col-md-4">
+                  <div class="day-header">
+                    <label class="form-label mb-0"><b>Tuesday</b></label>
+                    <button
+                      type="button"
+                      class="btn btn-outline-primary btn-sm day-modal-trigger"
+                      data-weekend="4"
+                      data-day="Tuesday"
+                    >
+                      ຄິດໄລ່ເງີນ
+                    </button>
+                  </div>
+                  <div class="row align-items-center mt-3 gy-2">
+                    <div class="col-12">
                       <input
                         name="Weekend_4_Tuesday"
                         type="text"
@@ -909,13 +915,27 @@
                         required
                       />
                     </div>
+                    <div class="col-12">
+                      <p id="Tuesday_4_addTotal" class="fw-bold text-success">Remaining: 0</p>
+                    </div>
                   </div>
                 </div>
 
+                <!-- Wednesday -->
                 <div class="mb-4 day-block">
-                  <label class="form-label text-uppercase text-muted"><b>Wednesday</b></label>
-                  <div class="row align-items-center gy-3 mt-2">
-                    <div class="col-12 col-md-4">
+                  <div class="day-header">
+                    <label class="form-label mb-0"><b>Wednesday</b></label>
+                    <button
+                      type="button"
+                      class="btn btn-outline-primary btn-sm day-modal-trigger"
+                      data-weekend="4"
+                      data-day="Wednesday"
+                    >
+                      ຄິດໄລ່ເງີນ
+                    </button>
+                  </div>
+                  <div class="row align-items-center mt-3 gy-2">
+                    <div class="col-12">
                       <input
                         name="Weekend_4_Wednesday"
                         type="text"
@@ -924,36 +944,27 @@
                         required
                       />
                     </div>
-                    <div class="col-12 col-md-3">
-                      <input
-                        name="Weekend_4_result"
-                        type="text"
-                        class="form-control number-input bg-light"
-                        placeholder="amount"
-                        required
-                      />
-                    </div>
-                    <div
-                      class="col-12 col-md-1 d-flex justify-content-center align-items-center highlight-chip"
-                    >
-                      <span>LEFT</span>
-                    </div>
-                    <div class="col-12 col-md-3">
-                      <input
-                        name="Wednesday_4_left"
-                        type="text"
-                        class="form-control number-input"
-                        placeholder="amount"
-                        required
-                      />
+                    <div class="col-12">
+                      <p id="Wednesday_4_addTotal" class="fw-bold text-success">Remaining: 0</p>
                     </div>
                   </div>
                 </div>
 
+                <!-- Thursday -->
                 <div class="mb-4 day-block">
-                  <label class="form-label text-uppercase text-muted"><b>Thursday</b></label>
-                  <div class="row align-items-center gy-3 mt-2">
-                    <div class="col-12 col-md-4">
+                  <div class="day-header">
+                    <label class="form-label mb-0"><b>Thursday</b></label>
+                    <button
+                      type="button"
+                      class="btn btn-outline-primary btn-sm day-modal-trigger"
+                      data-weekend="4"
+                      data-day="Thursday"
+                    >
+                      ຄິດໄລ່ເງີນ
+                    </button>
+                  </div>
+                  <div class="row align-items-center mt-3 gy-2">
+                    <div class="col-12">
                       <input
                         name="Weekend_4_Thursday"
                         type="text"
@@ -962,13 +973,27 @@
                         required
                       />
                     </div>
+                    <div class="col-12">
+                      <p id="Thursday_4_addTotal" class="fw-bold text-success">Remaining: 0</p>
+                    </div>
                   </div>
                 </div>
 
+                <!-- Friday -->
                 <div class="mb-4 day-block">
-                  <label class="form-label text-uppercase text-muted"><b>Friday</b></label>
-                  <div class="row align-items-center gy-3 mt-2">
-                    <div class="col-12 col-md-4">
+                  <div class="day-header">
+                    <label class="form-label mb-0"><b>Friday</b></label>
+                    <button
+                      type="button"
+                      class="btn btn-outline-primary btn-sm day-modal-trigger"
+                      data-weekend="4"
+                      data-day="Friday"
+                    >
+                      ຄິດໄລ່ເງີນ
+                    </button>
+                  </div>
+                  <div class="row align-items-center mt-3 gy-2">
+                    <div class="col-12">
                       <input
                         name="Weekend_4_Friday"
                         type="text"
@@ -977,27 +1002,27 @@
                         required
                       />
                     </div>
-                    <div
-                      class="col-12 col-md-3 d-flex justify-content-center align-items-center highlight-chip"
-                    >
-                      <span>LEFT</span>
-                    </div>
-                    <div class="col-12 col-md-4">
-                      <input
-                        name="Friday_4_left"
-                        type="text"
-                        class="form-control number-input"
-                        placeholder="amount"
-                        required
-                      />
+                    <div class="col-12">
+                      <p id="Friday_4_addTotal" class="fw-bold text-success">Remaining: 0</p>
                     </div>
                   </div>
                 </div>
 
+                <!-- Saturday -->
                 <div class="mb-4 day-block">
-                  <label class="form-label text-uppercase text-muted"><b>Saturday</b></label>
-                  <div class="row align-items-center gy-3 mt-2">
-                    <div class="col-12 col-md-4">
+                  <div class="day-header">
+                    <label class="form-label mb-0"><b>Saturday</b></label>
+                    <button
+                      type="button"
+                      class="btn btn-outline-primary btn-sm day-modal-trigger"
+                      data-weekend="4"
+                      data-day="Saturday"
+                    >
+                      ຄິດໄລ່ເງີນ
+                    </button>
+                  </div>
+                  <div class="row align-items-center mt-3 gy-2">
+                    <div class="col-12">
                       <input
                         name="Weekend_4_Saturday"
                         type="text"
@@ -1006,27 +1031,27 @@
                         required
                       />
                     </div>
-                    <div
-                      class="col-12 col-md-3 d-flex justify-content-center align-items-center highlight-chip"
-                    >
-                      <span>LEFT</span>
-                    </div>
-                    <div class="col-12 col-md-4">
-                      <input
-                        name="Saturday_4_left"
-                        type="text"
-                        class="form-control number-input"
-                        placeholder="amount"
-                        required
-                      />
+                    <div class="col-12">
+                      <p id="Saturday_4_addTotal" class="fw-bold text-success">Remaining: 0</p>
                     </div>
                   </div>
                 </div>
 
+                <!-- Sunday -->
                 <div class="mb-3 day-block">
-                  <label class="form-label text-uppercase text-muted"><b>Sunday</b></label>
-                  <div class="row align-items-center gy-3 mt-2">
-                    <div class="col-12 col-md-4">
+                  <div class="day-header">
+                    <label class="form-label mb-0"><b>Sunday</b></label>
+                    <button
+                      type="button"
+                      class="btn btn-outline-primary btn-sm day-modal-trigger"
+                      data-weekend="4"
+                      data-day="Sunday"
+                    >
+                      ຄິດໄລ່ເງີນ
+                    </button>
+                  </div>
+                  <div class="row align-items-center mt-3 gy-2">
+                    <div class="col-12">
                       <input
                         name="Weekend_4_Sunday"
                         type="text"
@@ -1035,19 +1060,8 @@
                         required
                       />
                     </div>
-                    <div
-                      class="col-12 col-md-3 d-flex justify-content-center align-items-center highlight-chip"
-                    >
-                      <span>LEFT</span>
-                    </div>
-                    <div class="col-12 col-md-4">
-                      <input
-                        name="Sunday_4_left"
-                        type="text"
-                        class="form-control number-input"
-                        placeholder="amount"
-                        required
-                      />
+                    <div class="col-12">
+                      <p id="Sunday_4_addTotal" class="fw-bold text-success">Remaining: 0</p>
                     </div>
                   </div>
                 </div>
@@ -1056,6 +1070,7 @@
               </div>
             </form>
           </div>
+
         </div>
       </div>
     </main>
