@@ -612,7 +612,7 @@ document.addEventListener("DOMContentLoaded", function () {
     return new Date().toISOString();
   }
 
-  function createRow(detailPlaceholder, rowData = {}) {
+  function createRow(detailPlaceholder, rowData = {}, options = {}) {
     const row = document.createElement("div");
     row.className = "mb-2 border rounded p-2 entry-row";
     row.innerHTML = `
@@ -625,11 +625,24 @@ document.addEventListener("DOMContentLoaded", function () {
       </div>
     `;
 
-    const timestamp = resolveTimestamp(rowData);
     const datetimeEl = row.querySelector(".current-datetime");
-    if (datetimeEl) {
-      datetimeEl.dataset.timestamp = timestamp;
-      datetimeEl.textContent = formatDateTimeDisplay(timestamp);
+    const suppressTimestamp =
+      options.hideTimestamp ||
+      rowData.suppressTimestamp === true ||
+      rowData.suppressTimestamp === "true";
+
+    if (suppressTimestamp) {
+      row.dataset.suppressTimestamp = "true";
+      if (datetimeEl) {
+        datetimeEl.textContent = "";
+        datetimeEl.removeAttribute("data-timestamp");
+      }
+    } else {
+      const timestamp = resolveTimestamp(rowData);
+      if (datetimeEl) {
+        datetimeEl.dataset.timestamp = timestamp;
+        datetimeEl.textContent = formatDateTimeDisplay(timestamp);
+      }
     }
 
     const detailInput = row.querySelector('input[type="text"]');
@@ -644,6 +657,18 @@ document.addEventListener("DOMContentLoaded", function () {
     return row;
   }
 
+  function ensureFirstRowSuppressed(container) {
+    if (!container) return;
+    const firstRow = container.querySelector(".entry-row");
+    if (!firstRow) return;
+    firstRow.dataset.suppressTimestamp = "true";
+    const datetimeEl = firstRow.querySelector(".current-datetime");
+    if (datetimeEl) {
+      datetimeEl.textContent = "";
+      datetimeEl.removeAttribute("data-timestamp");
+    }
+  }
+
   function renderContainer(container, day, type, detailPlaceholder) {
     if (!container) return;
     const storageKey = getWeekend1StorageKey(day, type);
@@ -653,12 +678,25 @@ document.addEventListener("DOMContentLoaded", function () {
     const data = loadStoredArray(storageKey);
     container.innerHTML = "";
     if (data.length === 0) {
-      container.appendChild(createRow(detailPlaceholder));
-    } else {
-      data.forEach((rowData) =>
-        container.appendChild(createRow(detailPlaceholder, rowData))
+      container.appendChild(
+        createRow(detailPlaceholder, { suppressTimestamp: true }, {
+          hideTimestamp: true,
+        })
       );
+    } else {
+      data.forEach((rowData, index) => {
+        const normalizedRowData =
+          index === 0
+            ? { ...rowData, suppressTimestamp: true }
+            : rowData;
+        container.appendChild(
+          createRow(detailPlaceholder, normalizedRowData, {
+            hideTimestamp: index === 0,
+          })
+        );
+      });
     }
+    ensureFirstRowSuppressed(container);
   }
 
   function saveDataFromContainer(container) {
@@ -669,9 +707,19 @@ document.addEventListener("DOMContentLoaded", function () {
     const data = [];
     container.querySelectorAll(".entry-row").forEach((row) => {
       const datetimeEl = row.querySelector(".current-datetime");
-      let timestamp = datetimeEl?.dataset.timestamp;
-      if (!timestamp) {
-        timestamp = new Date().toISOString();
+      const suppressTimestamp = row.dataset.suppressTimestamp === "true";
+      let timestamp = datetimeEl?.dataset.timestamp || null;
+
+      if (suppressTimestamp) {
+        if (datetimeEl) {
+          datetimeEl.textContent = "";
+          datetimeEl.removeAttribute("data-timestamp");
+        }
+        timestamp = null;
+      } else {
+        if (!timestamp) {
+          timestamp = new Date().toISOString();
+        }
         if (datetimeEl) {
           datetimeEl.dataset.timestamp = timestamp;
           datetimeEl.textContent = formatDateTimeDisplay(timestamp);
@@ -680,7 +728,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       const detail = row.querySelector('input[type="text"]').value;
       const amount = row.querySelector('input[type="number"]').value;
-      data.push({ timestamp, detail, amount });
+      data.push({ timestamp, detail, amount, suppressTimestamp });
     });
 
     localStorage.setItem(storageKey, JSON.stringify(data));
@@ -699,6 +747,7 @@ document.addEventListener("DOMContentLoaded", function () {
       const row = event.target.closest(".entry-row");
       if (row && container.querySelectorAll(".entry-row").length > 1) {
         row.remove();
+        ensureFirstRowSuppressed(container);
         saveDataFromContainer(container);
       }
     }
@@ -706,6 +755,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (event.target.classList.contains("btn-add")) {
       const placeholder = container.dataset.placeholder || "";
       container.appendChild(createRow(placeholder));
+      ensureFirstRowSuppressed(container);
       saveDataFromContainer(container);
     }
   }
