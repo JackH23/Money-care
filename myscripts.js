@@ -544,10 +544,16 @@ document.addEventListener("DOMContentLoaded", function () {
         const group = document.createElement("div");
         group.className = "input-group mb-2";
         group.innerHTML = `
-          <input type="text" class="form-control" name="${prefix}_detail_${index}" placeholder="Detail" value="${row.detail}" />
-          <input type="number" class="form-control" name="${prefix}_amount_${index}" placeholder="Amount" value="${row.amount}" />
-          <button type="button" class="btn btn-success btn-add">+</button>
-          <button type="button" class="btn btn-danger btn-remove">−</button>
+          <div class="d-flex mb-2 gap-2">
+            <input type="date" class="form-control" name="${prefix}_date_${index}" value="${row.date || ''}" />
+            <input type="time" class="form-control" name="${prefix}_time_${index}" value="${row.time || ''}" />
+          </div>
+          <div class="input-group">
+            <input type="text" class="form-control" name="${prefix}_detail_${index}" placeholder="Detail" value="${row.detail}" />
+            <input type="number" class="form-control" name="${prefix}_amount_${index}" placeholder="Amount" value="${row.amount}" />
+            <button type="button" class="btn btn-success btn-add">+</button>
+            <button type="button" class="btn btn-danger btn-remove">−</button>
+          </div>
         `;
         container.appendChild(group);
       });
@@ -579,9 +585,12 @@ document.addEventListener("DOMContentLoaded", function () {
     function saveData() {
       const data = [];
       container.querySelectorAll(".input-group").forEach((group) => {
+        const parent = group.parentElement;
+        const date = parent.querySelector("input[type='date']").value;
+        const time = parent.querySelector("input[type='time']").value;
         const detail = group.querySelector("input[type='text']").value;
         const amount = group.querySelector("input[type='number']").value;
-        data.push({ detail, amount });
+        data.push({ date, time, detail, amount });
       });
       localStorage.setItem(prefix, JSON.stringify(data));
     }
