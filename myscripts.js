@@ -17,7 +17,8 @@ const progressDots = document.querySelectorAll(".progress-dot");
 const weekendCounter = document.getElementById("weekendCounter");
 let currentIndex = 0;
 
-const weekend1Days = [
+const weekendNumbers = [1, 2, 3, 4];
+const weekendDays = [
   "Monday",
   "Tuesday",
   "Wednesday",
@@ -39,18 +40,21 @@ function parseNumeric(value) {
   return Number.isNaN(parsed) ? 0 : parsed;
 }
 
-function getWeekend1StorageKey(day, type) {
+function getWeekendStorageKey(weekend, day, type) {
   const normalized = String(type || "").toLowerCase();
+  const prefix = `Weekend${weekend}_${day}`;
+
   if (normalized === "add") {
-    return day === "Monday" ? "Monday_Add" : `Weekend1_${day}_Add`;
+    return `${prefix}_Add`;
   }
   if (normalized === "paid") {
-    return day === "Monday" ? "Monday_Paid" : `Weekend1_${day}_Paid`;
+    return `${prefix}_Paid`;
   }
   if (normalized === "remaining") {
-    return day === "Monday" ? "Monday_1_addTotal" : `Weekend1_${day}_Remaining`;
+    return `${prefix}_Remaining`;
   }
-  return `Weekend1_${day}_${type}`;
+
+  return `${prefix}_${type}`;
 }
 
 function loadStoredArray(key) {
@@ -136,10 +140,14 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  const storedFinal = localStorage.getItem("Weekend1_Final_Remaining");
-  if (storedFinal !== null) {
-    updateWeekend1FinalRemainingDisplay(storedFinal, false);
-  }
+  weekendNumbers.forEach((weekend) => {
+    const storedFinal = localStorage.getItem(
+      `Weekend${weekend}_Final_Remaining`
+    );
+    if (storedFinal !== null) {
+      updateWeekendFinalRemainingDisplay(weekend, storedFinal, false);
+    }
+  });
 });
 
 // Save input values to localStorage
@@ -158,8 +166,8 @@ document.querySelectorAll("input.number-input").forEach((input) => {
   });
 });
 
-function updateWeekend1FinalRemainingDisplay(value, persist = true) {
-  const displayEl = document.getElementById("Weekend1_Final_Remaining");
+function updateWeekendFinalRemainingDisplay(weekend, value, persist = true) {
+  const displayEl = document.getElementById(`Weekend${weekend}_Final_Remaining`);
   if (!displayEl) {
     return;
   }
@@ -174,13 +182,16 @@ function updateWeekend1FinalRemainingDisplay(value, persist = true) {
   displayEl.textContent = `Remaining: ${normalized.toLocaleString()}`;
 
   if (persist) {
-    localStorage.setItem("Weekend1_Final_Remaining", normalized.toString());
+    localStorage.setItem(
+      `Weekend${weekend}_Final_Remaining`,
+      normalized.toString()
+    );
   }
 }
 
-function updateWeekend1DayTotals(day, startingBalance = null) {
-  const paidData = loadStoredArray(getWeekend1StorageKey(day, "Paid"));
-  const addData = loadStoredArray(getWeekend1StorageKey(day, "Add"));
+function updateWeekendDayTotals(weekend, day, startingBalance = null) {
+  const paidData = loadStoredArray(getWeekendStorageKey(weekend, day, "Paid"));
+  const addData = loadStoredArray(getWeekendStorageKey(weekend, day, "Add"));
 
   const paidTotal = paidData.reduce(
     (sum, row) => sum + parseNumeric(row?.amount || 0),
@@ -192,14 +203,14 @@ function updateWeekend1DayTotals(day, startingBalance = null) {
   );
 
   const totalInput = document.querySelector(
-    `input[name="Weekend_1_${day}"]`
+    `input[name="Weekend_${weekend}_${day}"]`
   );
   if (totalInput) {
     totalInput.value = paidTotal.toLocaleString();
-    localStorage.setItem(`Weekend_1_${day}`, totalInput.value);
+    localStorage.setItem(`Weekend_${weekend}_${day}`, totalInput.value);
   }
 
-  const assetInput = document.querySelector('input[name="asset1"]');
+  const assetInput = document.querySelector(`input[name="asset${weekend}"]`);
   const assetVal = parseNumeric(assetInput?.value || "0");
   const hasStartingBalance =
     typeof startingBalance === "number" && !Number.isNaN(startingBalance);
@@ -207,358 +218,43 @@ function updateWeekend1DayTotals(day, startingBalance = null) {
 
   const remaining = baseBalance + addTotal - paidTotal;
   const normalizedRemaining = Number.isFinite(remaining) ? remaining : 0;
-  const displayEl = document.getElementById(`${day}_1_addTotal`);
+  const displayEl = document.getElementById(`${day}_${weekend}_addTotal`);
   if (displayEl) {
     displayEl.textContent = `Remaining: ${normalizedRemaining.toLocaleString()}`;
   }
 
   localStorage.setItem(
-    getWeekend1StorageKey(day, "Remaining"),
+    getWeekendStorageKey(weekend, day, "Remaining"),
     normalizedRemaining
   );
 
   return normalizedRemaining;
 }
 
-function calculateWeekend1() {
-  const assetInput = document.querySelector('input[name="asset1"]');
+function calculateWeekend(weekend) {
+  const assetInput = document.querySelector(`input[name="asset${weekend}"]`);
   let runningBalance = parseNumeric(assetInput?.value || "0");
   runningBalance = Number.isFinite(runningBalance) ? runningBalance : 0;
 
-  weekend1Days.forEach((day) => {
-    const nextBalance = updateWeekend1DayTotals(day, runningBalance);
+  weekendDays.forEach((day) => {
+    const nextBalance = updateWeekendDayTotals(weekend, day, runningBalance);
     runningBalance = Number.isFinite(nextBalance) ? nextBalance : 0;
   });
 
-  updateWeekend1FinalRemainingDisplay(runningBalance);
+  updateWeekendFinalRemainingDisplay(weekend, runningBalance);
 }
 
-document
-  .querySelector("#Btn_Manage1")
-  .addEventListener("click", calculateWeekend1);
+weekendNumbers.forEach((weekend) => {
+  const manageBtn = document.querySelector(`#Btn_Manage${weekend}`);
+  if (manageBtn) {
+    manageBtn.addEventListener("click", () => calculateWeekend(weekend));
+  }
+});
 
-function calculateWeekend2() {
-  // Monday
-  const assetInput = document.querySelector('input[name="asset2"]');
-  const mondayInput = document.querySelector('input[name="Weekend_2_Monday"]');
-  const mondayLeftInput = document.querySelector('input[name="Monday_2_left"]');
-
-  const assetVal =
-    parseFloat((assetInput?.value || "0").replace(/,/g, "")) || 0;
-  const mondayVal =
-    parseFloat((mondayInput?.value || "0").replace(/,/g, "")) || 0;
-  const mondayLeft = assetVal - mondayVal;
-
-  mondayLeftInput.value = mondayLeft.toLocaleString();
-  localStorage.setItem("weekend2_Monday_1", mondayLeftInput.value);
-
-  // Tuesday
-  const tuesday =
-    parseFloat(
-      (
-        document.querySelector('input[name="Weekend_2_Tuesday"]').value || "0"
-      ).replace(/,/g, "")
-    ) || 0;
-  const tuesdayLeftInput = document.querySelector(
-    'input[name="Tuesday_2_left"]'
-  );
-  const tuesdayLeft = mondayLeft - tuesday;
-  tuesdayLeftInput.value = tuesdayLeft.toLocaleString();
-  localStorage.setItem("Tuesday_2_left", tuesdayLeftInput.value);
-
-  // Wednesday + Thursday
-  const wednesday =
-    parseFloat(
-      (
-        document.querySelector('input[name="Weekend_2_Wednesday"]').value || "0"
-      ).replace(/,/g, "")
-    ) || 0;
-  const thursday =
-    parseFloat(
-      (
-        document.querySelector('input[name="Weekend_2_Thursday"]').value || "0"
-      ).replace(/,/g, "")
-    ) || 0;
-
-  const totalWeekUsed = wednesday + thursday;
-
-  // Update Thursday result
-  const resultInput = document.querySelector('input[name="Weekend_2_result"]');
-  resultInput.value = totalWeekUsed.toLocaleString();
-
-  // Calculate Thursday LEFT
-  const thursdayLeftInput = document.querySelector(
-    'input[name="Thursday_2_left"]'
-  );
-  const thursdayLeft = tuesdayLeft - totalWeekUsed;
-  thursdayLeftInput.value = thursdayLeft.toLocaleString();
-
-  // Friday
-  const friday =
-    parseFloat(
-      (
-        document.querySelector('input[name="Weekend_2_Friday"]').value || "0"
-      ).replace(/,/g, "")
-    ) || 0;
-  const fridayLeft = thursdayLeft - friday;
-  const fridayLeftInput = document.querySelector('input[name="Friday_2_left"]');
-  fridayLeftInput.value = fridayLeft.toLocaleString();
-
-  // Saturday
-  const saturday =
-    parseFloat(
-      (
-        document.querySelector('input[name="Weekend_2_Saturday"]').value || "0"
-      ).replace(/,/g, "")
-    ) || 0;
-  const saturdayLeft = fridayLeft - saturday;
-  const saturdayLeftInput = document.querySelector(
-    'input[name="Saturday_2_left"]'
-  );
-  saturdayLeftInput.value = saturdayLeft.toLocaleString();
-
-  // Sunday
-  const sunday =
-    parseFloat(
-      (
-        document.querySelector('input[name="Weekend_2_Sunday"]').value || "0"
-      ).replace(/,/g, "")
-    ) || 0;
-  const sundayLeft = saturdayLeft - sunday;
-  const sundayLeftInput = document.querySelector('input[name="Sunday_2_left"]');
-  sundayLeftInput.value = sundayLeft.toLocaleString();
-
-  // Save all results to localStorage
-  localStorage.setItem("weekend2_Tuesday_1", tuesdayLeftInput.value);
-  localStorage.setItem("weekend2_Thursday_1", resultInput.value);
-  localStorage.setItem("weekend2_Thursday_2", thursdayLeftInput.value);
-  localStorage.setItem("weekend2_Friday_1", fridayLeftInput.value);
-  localStorage.setItem("weekend2_Saturday_1", saturdayLeftInput.value);
-  localStorage.setItem("weekend2_Sunday_1", sundayLeftInput.value);
-}
-
-document
-  .querySelector("#Btn_Manage2")
-  .addEventListener("click", calculateWeekend2);
-
-function calculateWeekend3() {
-  // Monday
-  const assetInput = document.querySelector('input[name="asset3"]');
-  const mondayInput = document.querySelector('input[name="Weekend_3_Monday"]');
-  const mondayLeftInput = document.querySelector('input[name="Monday_3_left"]');
-
-  const assetVal =
-    parseFloat((assetInput?.value || "0").replace(/,/g, "")) || 0;
-  const mondayVal =
-    parseFloat((mondayInput?.value || "0").replace(/,/g, "")) || 0;
-  const mondayLeft = assetVal - mondayVal;
-
-  mondayLeftInput.value = mondayLeft.toLocaleString();
-  localStorage.setItem("weekend3_Monday_1", mondayLeftInput.value);
-
-  // Tuesday
-  const tuesday =
-    parseFloat(
-      (
-        document.querySelector('input[name="Weekend_3_Tuesday"]').value || "0"
-      ).replace(/,/g, "")
-    ) || 0;
-  const tuesdayLeftInput = document.querySelector(
-    'input[name="Tuesday_3_left"]'
-  );
-  const tuesdayLeft = mondayLeft - tuesday;
-  tuesdayLeftInput.value = tuesdayLeft.toLocaleString();
-  localStorage.setItem("weekend3_Tuesday_1", tuesdayLeftInput.value);
-
-  // Wednesday
-  const wednesday =
-    parseFloat(
-      (
-        document.querySelector('input[name="Weekend_3_Wednesday"]').value || "0"
-      ).replace(/,/g, "")
-    ) || 0;
-  const result1 =
-    parseFloat(
-      (
-        document.querySelector('input[name="Wednesday_3_result1"]').value || "0"
-      ).replace(/,/g, "")
-    ) || 0;
-  const result2Input = document.querySelector(
-    'input[name="Wednesday_3_result2"]'
-  );
-  const wednesdayLeftInput = document.querySelector(
-    'input[name="Wednesday_3_left"]'
-  );
-
-  const result2 = wednesday + result1;
-  result2Input.value = result2.toLocaleString();
-
-  const wednesdayLeft = tuesdayLeft - result2;
-  wednesdayLeftInput.value = wednesdayLeft.toLocaleString();
-
-  localStorage.setItem("weekend3_Wednesday_2", result2Input.value);
-  localStorage.setItem("weekend3_Wednesday_3", wednesdayLeftInput.value);
-
-  // Thursday
-  const thursday =
-    parseFloat(
-      (
-        document.querySelector('input[name="Weekend_3_Thursday"]').value || "0"
-      ).replace(/,/g, "")
-    ) || 0;
-  const thursdayLeftInput = document.querySelector(
-    'input[name="Thursday_3_left"]'
-  );
-  const thursdayLeft = wednesdayLeft - thursday;
-  thursdayLeftInput.value = thursdayLeft.toLocaleString();
-
-  localStorage.setItem("weekend3_Thursday_1", thursdayLeftInput.value);
-
-  // Friday
-  const friday =
-    parseFloat(
-      (
-        document.querySelector('input[name="Weekend_3_Friday"]').value || "0"
-      ).replace(/,/g, "")
-    ) || 0;
-  const fridayLeftInput = document.querySelector('input[name="Friday_3_left"]');
-  const fridayLeft = thursdayLeft - friday;
-  fridayLeftInput.value = fridayLeft.toLocaleString();
-
-  localStorage.setItem("weekend3_Friday_1", fridayLeftInput.value);
-
-  // Saturday
-  const saturday =
-    parseFloat(
-      (
-        document.querySelector('input[name="Weekend_3_Saturday"]').value || "0"
-      ).replace(/,/g, "")
-    ) || 0;
-  const saturdayLeft = fridayLeft - saturday;
-  const saturdayLeftInput = document.querySelector(
-    'input[name="Saturday_3_left"]'
-  );
-  saturdayLeftInput.value = saturdayLeft.toLocaleString();
-
-  // Sunday
-  const sunday =
-    parseFloat(
-      (
-        document.querySelector('input[name="Weekend_3_Sunday"]').value || "0"
-      ).replace(/,/g, "")
-    ) || 0;
-  const sundayLeft = saturdayLeft - sunday;
-  const sundayLeftInput = document.querySelector('input[name="Sunday_3_left"]');
-  sundayLeftInput.value = sundayLeft.toLocaleString();
-
-  localStorage.setItem("weekend3_Saturday_1", saturdayLeftInput.value);
-  localStorage.setItem("weekend3_Sunday_1", sundayLeftInput.value);
-}
-
-document
-  .querySelector("#Btn_Manage3")
-  .addEventListener("click", calculateWeekend3);
-
-function calculateWeekend4() {
-  // Monday
-  const assetInput = document.querySelector('input[name="asset4"]');
-  const mondayInput = document.querySelector('input[name="Weekend_4_Monday"]');
-  const mondayLeftInput = document.querySelector('input[name="Monday_4_left"]');
-
-  const assetVal =
-    parseFloat((assetInput?.value || "0").replace(/,/g, "")) || 0;
-  const mondayVal =
-    parseFloat((mondayInput?.value || "0").replace(/,/g, "")) || 0;
-  const mondayLeft = assetVal - mondayVal;
-
-  mondayLeftInput.value = mondayLeft.toLocaleString();
-  localStorage.setItem("weekend4_Monday_1", mondayLeftInput.value);
-
-  // Tuesday + Wednesday + Thursday
-  const tuesday =
-    parseFloat(
-      (
-        document.querySelector('input[name="Weekend_4_Tuesday"]').value || "0"
-      ).replace(/,/g, "")
-    ) || 0;
-  const wednesday =
-    parseFloat(
-      (
-        document.querySelector('input[name="Weekend_4_Wednesday"]').value || "0"
-      ).replace(/,/g, "")
-    ) || 0;
-  const thursday =
-    parseFloat(
-      (
-        document.querySelector('input[name="Weekend_4_Thursday"]').value || "0"
-      ).replace(/,/g, "")
-    ) || 0;
-
-  const totalWeekUsed = tuesday + wednesday + thursday;
-
-  // Update Weekend 4 result
-  const resultInput = document.querySelector('input[name="Weekend_4_result"]');
-  resultInput.value = totalWeekUsed.toLocaleString();
-
-  localStorage.setItem("weekend4_Wednesday_1", resultInput.value);
-
-  // Calculate Weekend4 LEFT
-  const wednesdayLeftInput = document.querySelector(
-    'input[name="Wednesday_4_left"]'
-  );
-  const wednesdayLeft = mondayLeft - totalWeekUsed;
-  wednesdayLeftInput.value = wednesdayLeft.toLocaleString();
-
-  localStorage.setItem("weekend4_Wednesday_2", wednesdayLeftInput.value);
-
-  // Friday
-  const friday =
-    parseFloat(
-      (
-        document.querySelector('input[name="Weekend_4_Friday"]').value || "0"
-      ).replace(/,/g, "")
-    ) || 0;
-  const fridayLeftInput = document.querySelector('input[name="Friday_4_left"]');
-  const fridayLeft = wednesdayLeft - friday;
-  fridayLeftInput.value = fridayLeft.toLocaleString();
-
-  localStorage.setItem("weekend4_Friday_1", fridayLeftInput.value);
-
-  // Saturday
-  const saturday =
-    parseFloat(
-      (
-        document.querySelector('input[name="Weekend_4_Saturday"]').value || "0"
-      ).replace(/,/g, "")
-    ) || 0;
-  const saturdayLeft = fridayLeft - saturday;
-  const saturdayLeftInput = document.querySelector(
-    'input[name="Saturday_4_left"]'
-  );
-  saturdayLeftInput.value = saturdayLeft.toLocaleString();
-
-  // Sunday
-  const sunday =
-    parseFloat(
-      (
-        document.querySelector('input[name="Weekend_4_Sunday"]').value || "0"
-      ).replace(/,/g, "")
-    ) || 0;
-  const sundayLeft = saturdayLeft - sunday;
-  const sundayLeftInput = document.querySelector('input[name="Sunday_4_left"]');
-  sundayLeftInput.value = sundayLeft.toLocaleString();
-
-  localStorage.setItem("weekend4_Saturday_1", saturdayLeftInput.value);
-  localStorage.setItem("weekend4_Sunday_1", sundayLeftInput.value);
-}
-
-document
-  .querySelector("#Btn_Manage4")
-  .addEventListener("click", calculateWeekend4);
-
-function attachAutoCalc(sectionIndex, calcFn) {
+function attachAutoCalc(sectionIndex, weekend) {
   const section = document.querySelectorAll(".section")[sectionIndex];
   if (!section) return;
+  const calcFn = () => calculateWeekend(weekend);
   section.querySelectorAll("input.number-input").forEach((inp) => {
     inp.addEventListener("input", calcFn);
   });
@@ -566,10 +262,9 @@ function attachAutoCalc(sectionIndex, calcFn) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  attachAutoCalc(0, calculateWeekend1);
-  attachAutoCalc(1, calculateWeekend2);
-  attachAutoCalc(2, calculateWeekend3);
-  attachAutoCalc(3, calculateWeekend4);
+  weekendNumbers.forEach((weekend, index) => {
+    attachAutoCalc(index, weekend);
+  });
 
   const handleStickyWidth = () => {
     document.querySelectorAll(".weekend-header-sticky").forEach((header) => {
@@ -589,28 +284,41 @@ document.addEventListener("DOMContentLoaded", () => {
 document.addEventListener("DOMContentLoaded", function () {
   const modalEl = document.getElementById("dayModal");
   const dayButtons = document.querySelectorAll(
-    ".day-modal-trigger[data-day]"
+    ".day-modal-trigger[data-day][data-weekend]"
   );
-  const assetInput = document.querySelector('input[name="asset1"]');
 
-  weekend1Days.forEach((day) => {
-    const savedRemain = localStorage.getItem(
-      getWeekend1StorageKey(day, "Remaining")
+  weekendNumbers.forEach((weekend) => {
+    weekendDays.forEach((day) => {
+      const savedRemain = localStorage.getItem(
+        getWeekendStorageKey(weekend, day, "Remaining")
+      );
+      const displayEl = document.getElementById(`${day}_${weekend}_addTotal`);
+      if (savedRemain !== null && displayEl) {
+        const parsed = parseNumeric(savedRemain);
+        displayEl.textContent = `Remaining: ${parsed.toLocaleString()}`;
+      }
+    });
+
+    const storedFinal = localStorage.getItem(
+      `Weekend${weekend}_Final_Remaining`
     );
-    const displayEl = document.getElementById(`${day}_1_addTotal`);
-    if (savedRemain !== null && displayEl) {
-      const parsed = parseNumeric(savedRemain);
-      displayEl.textContent = `Remaining: ${parsed.toLocaleString()}`;
+    if (storedFinal !== null) {
+      updateWeekendFinalRemainingDisplay(weekend, storedFinal, false);
     }
   });
 
   const refreshAllDays = () => {
-    calculateWeekend1();
+    weekendNumbers.forEach((weekend) => {
+      calculateWeekend(weekend);
+    });
   };
 
-  if (assetInput) {
-    assetInput.addEventListener("input", refreshAllDays);
-  }
+  weekendNumbers
+    .map((weekend) => document.querySelector(`input[name="asset${weekend}"]`))
+    .filter(Boolean)
+    .forEach((assetInput) => {
+      assetInput.addEventListener("input", refreshAllDays);
+    });
 
   if (!modalEl) {
     refreshAllDays();
@@ -629,6 +337,7 @@ document.addEventListener("DOMContentLoaded", function () {
   };
 
   let currentDay = null;
+  let currentWeekend = null;
 
   function formatDateTimeDisplay(input) {
     const date = typeof input === "string" ? new Date(input) : input;
@@ -722,12 +431,13 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  function renderContainer(container, day, type, detailPlaceholder) {
+  function renderContainer(container, weekend, day, type, detailPlaceholder) {
     if (!container) return;
-    const storageKey = getWeekend1StorageKey(day, type);
+    const storageKey = getWeekendStorageKey(weekend, day, type);
     container.dataset.storageKey = storageKey;
     container.dataset.placeholder = detailPlaceholder;
     container.dataset.day = day;
+    container.dataset.weekend = String(weekend);
     const data = loadStoredArray(storageKey);
     container.innerHTML = "";
     if (data.length === 0) {
@@ -787,8 +497,9 @@ document.addEventListener("DOMContentLoaded", function () {
     localStorage.setItem(storageKey, JSON.stringify(data));
 
     const day = container.dataset.day;
-    if (day) {
-      calculateWeekend1();
+    const weekend = Number.parseInt(container.dataset.weekend, 10);
+    if (day && Number.isFinite(weekend)) {
+      calculateWeekend(weekend);
     }
   }
 
@@ -829,8 +540,12 @@ document.addEventListener("DOMContentLoaded", function () {
   dayButtons.forEach((btn) => {
     btn.addEventListener("click", () => {
       const day = btn.dataset.day;
-      if (!day) return;
+      const weekend = Number.parseInt(btn.dataset.weekend, 10);
+      if (!day || Number.isNaN(weekend)) {
+        return;
+      }
       currentDay = day;
+      currentWeekend = weekend;
 
       if (dayModalLabel) {
         dayModalLabel.textContent = `${day} Details`;
@@ -841,26 +556,29 @@ document.addEventListener("DOMContentLoaded", function () {
 
       renderContainer(
         addContainer,
+        weekend,
         day,
         "Add",
         detailPlaceholders.Add
       );
       renderContainer(
         paidContainer,
+        weekend,
         day,
         "Paid",
         detailPlaceholders.Paid
       );
 
       dayModal.show();
-      calculateWeekend1();
+      calculateWeekend(weekend);
     });
   });
 
   modalEl.addEventListener("hidden.bs.modal", () => {
-    if (currentDay) {
-      calculateWeekend1();
+    if (currentDay !== null && currentWeekend !== null) {
+      calculateWeekend(currentWeekend);
       currentDay = null;
+      currentWeekend = null;
     }
   });
 
