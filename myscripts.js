@@ -16,6 +16,11 @@ const sections = document.querySelectorAll(".section");
 const progressDots = document.querySelectorAll(".progress-dot");
 const weekendCounter = document.getElementById("weekendCounter");
 let currentIndex = 0;
+let resetFeedbackTimeoutId = null;
+
+const RESET_CONFIRM_MESSAGE =
+  "Are you sure you want to clear all saved planner data? This will remove weekend budgets, transactions, and totals.";
+const RESET_SUCCESS_MESSAGE = "All saved planner data has been cleared.";
 
 const weekendNumbers = [1, 2, 3, 4];
 const weekendDays = [
@@ -277,6 +282,124 @@ function calculateWeekend(weekend) {
   });
 
   updateWeekendFinalRemainingDisplay(weekend, runningBalance);
+}
+
+function shouldClearStorageKey(key) {
+  if (!key) {
+    return false;
+  }
+
+  const normalizedKey = String(key).toLowerCase();
+  return (
+    normalizedKey.startsWith("weekend") || normalizedKey.startsWith("asset")
+  );
+}
+
+function clearPlannerStorage() {
+  if (typeof window === "undefined" || !window.localStorage) {
+    return;
+  }
+
+  const keysToRemove = [];
+  for (let index = 0; index < localStorage.length; index += 1) {
+    const key = localStorage.key(index);
+    if (shouldClearStorageKey(key)) {
+      keysToRemove.push(key);
+    }
+  }
+
+  keysToRemove.forEach((key) => {
+    try {
+      localStorage.removeItem(key);
+    } catch (err) {
+      /* ignore storage errors */
+    }
+  });
+}
+
+function resetPlannerForms() {
+  document.querySelectorAll(".number-input").forEach((input) => {
+    input.value = "";
+  });
+
+  weekendNumbers.forEach((weekend) => {
+    weekendDays.forEach((day) => {
+      const displayEl = document.getElementById(`${day}_${weekend}_addTotal`);
+      if (displayEl) {
+        displayEl.textContent = "Remaining: 0";
+      }
+    });
+    updateWeekendFinalRemainingDisplay(weekend, 0, false);
+  });
+
+  const modalEl = document.getElementById("dayModal");
+  if (modalEl) {
+    modalEl.querySelectorAll(".transaction-container").forEach((container) => {
+      const rows = Array.from(container.querySelectorAll(".entry-row"));
+      rows.forEach((row, rowIndex) => {
+        row.querySelectorAll("input").forEach((input) => {
+          input.value = "";
+        });
+        const datetimeEl = row.querySelector(".current-datetime");
+        if (datetimeEl) {
+          datetimeEl.textContent = "";
+          datetimeEl.removeAttribute("data-timestamp");
+        }
+        if (rowIndex === 0) {
+          row.dataset.suppressTimestamp = "true";
+        } else {
+          row.remove();
+        }
+      });
+    });
+  }
+}
+
+function showResetFeedback(message) {
+  const feedbackEl = document.getElementById("resetFeedback");
+  if (!feedbackEl) {
+    window.alert(message);
+    return;
+  }
+
+  if (resetFeedbackTimeoutId) {
+    window.clearTimeout(resetFeedbackTimeoutId);
+  }
+
+  feedbackEl.textContent = message;
+  feedbackEl.classList.remove("d-none");
+  feedbackEl.classList.remove("show");
+  // Force a reflow so the animation restarts when the class is added again.
+  void feedbackEl.offsetWidth;
+  feedbackEl.classList.add("show");
+
+  resetFeedbackTimeoutId = window.setTimeout(() => {
+    feedbackEl.classList.add("d-none");
+    feedbackEl.classList.remove("show");
+    resetFeedbackTimeoutId = null;
+  }, 4000);
+}
+
+function resetPlanner() {
+  const userConfirmed = window.confirm(RESET_CONFIRM_MESSAGE);
+  if (!userConfirmed) {
+    return;
+  }
+
+  clearPlannerStorage();
+  resetPlannerForms();
+
+  weekendNumbers.forEach((weekend) => {
+    calculateWeekend(weekend);
+  });
+
+  showSection(0);
+  showResetFeedback(RESET_SUCCESS_MESSAGE);
+
+  const firstAssetInput = document.querySelector('input[name="asset1"]');
+  if (firstAssetInput) {
+    firstAssetInput.focus();
+  }
 }
 
 weekendNumbers.forEach((weekend) => {
@@ -618,4 +741,13 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   refreshAllDays();
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+  const resetButton = document.getElementById("resetPlannerButton");
+  if (!resetButton) {
+    return;
+  }
+
+  resetButton.addEventListener("click", resetPlanner);
 });

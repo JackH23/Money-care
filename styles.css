@@ -73,6 +73,42 @@ body.app-body {
   color: var(--text-muted);
 }
 
+.reset-planner-btn {
+  font-weight: 600;
+  border-radius: 999px;
+  padding: 0.5rem 1.25rem;
+  white-space: nowrap;
+  align-self: flex-start;
+}
+
+.reset-feedback {
+  box-shadow: 0 12px 24px rgba(59, 91, 219, 0.15);
+  border-radius: 999px;
+  padding: 0.75rem 1.5rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.reset-feedback.show {
+  animation: fade-in-out 4s ease-in-out;
+}
+
+@keyframes fade-in-out {
+  0% {
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
 .progress-dots {
   display: flex;
   gap: 0.75rem;
