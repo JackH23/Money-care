@@ -39,47 +39,60 @@
             Weekend 1 of 4
           </div>
 
-          <div class="progress-dots" role="tablist" aria-label="Select weekend">
-            <button
-              type="button"
-              class="progress-dot active"
-              data-index="0"
-              aria-label="Show Weekend 1"
-              aria-pressed="true"
-            >
-              <span class="dot"></span>
-              <span class="dot-label">Weekend 1</span>
-            </button>
-            <button
-              type="button"
-              class="progress-dot"
-              data-index="1"
-              aria-label="Show Weekend 2"
-              aria-pressed="false"
-            >
-              <span class="dot"></span>
-              <span class="dot-label">Weekend 2</span>
-            </button>
-            <button
-              type="button"
-              class="progress-dot"
-              data-index="2"
-              aria-label="Show Weekend 3"
-              aria-pressed="false"
-            >
-              <span class="dot"></span>
-              <span class="dot-label">Weekend 3</span>
-            </button>
-            <button
-              type="button"
-              class="progress-dot"
-              data-index="3"
-              aria-label="Show Weekend 4"
-              aria-pressed="false"
-            >
-              <span class="dot"></span>
-              <span class="dot-label">Weekend 4</span>
-            </button>
+          <div class="weekend-progress-group d-flex flex-column align-items-center gap-2">
+            <div class="progress-dots" role="tablist" aria-label="Select weekend">
+              <button
+                type="button"
+                class="progress-dot active"
+                data-index="0"
+                aria-label="Show Weekend 1"
+                aria-pressed="true"
+              >
+                <span class="dot"></span>
+                <span class="dot-label">Weekend 1</span>
+              </button>
+              <button
+                type="button"
+                class="progress-dot"
+                data-index="1"
+                aria-label="Show Weekend 2"
+                aria-pressed="false"
+              >
+                <span class="dot"></span>
+                <span class="dot-label">Weekend 2</span>
+              </button>
+              <button
+                type="button"
+                class="progress-dot"
+                data-index="2"
+                aria-label="Show Weekend 3"
+                aria-pressed="false"
+              >
+                <span class="dot"></span>
+                <span class="dot-label">Weekend 3</span>
+              </button>
+              <button
+                type="button"
+                class="progress-dot"
+                data-index="3"
+                aria-label="Show Weekend 4"
+                aria-pressed="false"
+              >
+                <span class="dot"></span>
+                <span class="dot-label">Weekend 4</span>
+              </button>
+            </div>
+            <div class="weekend-lock-control d-flex flex-column flex-sm-row align-items-center justify-content-center gap-2">
+              <button
+                type="button"
+                id="lockWeekendButton"
+                class="btn btn-outline-secondary lock-weekend-btn"
+                aria-pressed="false"
+              >
+                Lock Weekend 1
+              </button>
+              <span id="lockStatus" class="lock-status text-muted small">No weekend locked.</span>
+            </div>
           </div>
           <div class="planner-action-buttons d-flex flex-column flex-sm-row gap-2">
             <button

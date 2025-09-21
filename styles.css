@@ -67,10 +67,41 @@ body.app-body {
   margin-bottom: 1.5rem;
 }
 
+.weekend-progress-group {
+  width: 100%;
+}
+
 .weekend-counter {
   letter-spacing: 0.2em;
   font-size: 0.75rem;
   color: var(--text-muted);
+}
+
+.weekend-lock-control {
+  text-align: center;
+}
+
+.lock-weekend-btn {
+  border-radius: 999px;
+  font-weight: 600;
+  padding: 0.4rem 1.2rem;
+  transition: color var(--transition), border-color var(--transition),
+    background var(--transition);
+}
+
+.lock-weekend-btn.is-locked {
+  background: rgba(26, 161, 121, 0.1);
+  border-color: rgba(26, 161, 121, 0.6);
+  color: var(--success);
+}
+
+.lock-status {
+  min-height: 1.25rem;
+}
+
+.lock-status.active {
+  color: var(--success) !important;
+  font-weight: 600;
 }
 
 .reset-planner-btn {
@@ -162,6 +193,15 @@ body.app-body {
   border-color: rgba(59, 91, 219, 0.6);
   transform: translateY(-2px);
   box-shadow: 0 16px 32px rgba(59, 91, 219, 0.25);
+}
+
+.progress-dot.locked {
+  border-color: rgba(26, 161, 121, 0.6);
+  color: var(--success);
+}
+
+.progress-dot.locked .dot {
+  background: var(--success);
 }
 
 .progress-dot.active .dot,

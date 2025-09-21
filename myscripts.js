@@ -15,7 +15,17 @@ document.querySelectorAll(".number-input").forEach((input) => {
 const sections = document.querySelectorAll(".section");
 const progressDots = document.querySelectorAll(".progress-dot");
 const weekendCounter = document.getElementById("weekendCounter");
+const lockWeekendButton = document.getElementById("lockWeekendButton");
+const lockStatusElement = document.getElementById("lockStatus");
+const LOCKED_WEEKEND_STORAGE_KEY = "lockedWeekendIndex";
+const LOCKED_WEEKEND_STORAGE_KEY_LOWER =
+  LOCKED_WEEKEND_STORAGE_KEY.toLowerCase();
+
 let currentIndex = 0;
+const storedLockedWeekendIndex = getLockedWeekendIndex();
+if (typeof storedLockedWeekendIndex === "number") {
+  currentIndex = storedLockedWeekendIndex;
+}
 let resetFeedbackTimeoutId = null;
 
 const RESET_CONFIRM_MESSAGE =
@@ -95,6 +105,50 @@ function loadStoredArray(key) {
   }
 }
 
+function isValidWeekendIndex(index) {
+  return (
+    Number.isInteger(index) && index >= 0 && index < (sections?.length || 0)
+  );
+}
+
+function getLockedWeekendIndex() {
+  if (typeof window === "undefined" || !window.localStorage) {
+    return null;
+  }
+
+  try {
+    const stored = localStorage.getItem(LOCKED_WEEKEND_STORAGE_KEY);
+    if (stored === null) {
+      return null;
+    }
+
+    const parsed = Number.parseInt(stored, 10);
+    return isValidWeekendIndex(parsed) ? parsed : null;
+  } catch (err) {
+    return null;
+  }
+}
+
+function setLockedWeekendIndex(index) {
+  if (!isValidWeekendIndex(index)) {
+    return;
+  }
+
+  try {
+    localStorage.setItem(LOCKED_WEEKEND_STORAGE_KEY, String(index));
+  } catch (err) {
+    /* ignore storage errors */
+  }
+}
+
+function clearLockedWeekendIndex() {
+  try {
+    localStorage.removeItem(LOCKED_WEEKEND_STORAGE_KEY);
+  } catch (err) {
+    /* ignore storage errors */
+  }
+}
+
 function showSection(index) {
   if (!sections.length) {
     return;
@@ -116,6 +170,53 @@ function showSection(index) {
   if (weekendCounter) {
     weekendCounter.textContent = `Weekend ${currentIndex + 1} of ${sections.length}`;
   }
+
+  updateLockControls();
+}
+
+function updateLockControls() {
+  if (!sections.length) {
+    return;
+  }
+
+  const lockedIndex = getLockedWeekendIndex();
+  const validLockedIndex =
+    typeof lockedIndex === "number" && isValidWeekendIndex(lockedIndex)
+      ? lockedIndex
+      : null;
+
+  if (lockWeekendButton) {
+    const weekendLabel = currentIndex + 1;
+    const isCurrentLocked = validLockedIndex === currentIndex;
+    lockWeekendButton.textContent = isCurrentLocked
+      ? `Unlock Weekend ${weekendLabel}`
+      : `Lock Weekend ${weekendLabel}`;
+    lockWeekendButton.setAttribute("aria-pressed", isCurrentLocked ? "true" : "false");
+    lockWeekendButton.classList.toggle("is-locked", isCurrentLocked);
+  }
+
+  if (lockStatusElement) {
+    if (validLockedIndex !== null) {
+      lockStatusElement.textContent = `Weekend ${validLockedIndex + 1} opens by default.`;
+      lockStatusElement.classList.add("active");
+    } else {
+      lockStatusElement.textContent = "No weekend locked.";
+      lockStatusElement.classList.remove("active");
+    }
+  }
+
+  progressDots.forEach((dot, index) => {
+    const baseLabel = `Show Weekend ${index + 1}`;
+    const isLocked = validLockedIndex === index;
+    dot.classList.toggle("locked", isLocked);
+    if (isLocked) {
+      dot.setAttribute("aria-label", `${baseLabel} (locked by default)`);
+      dot.setAttribute("title", "Locked weekend");
+    } else {
+      dot.setAttribute("aria-label", baseLabel);
+      dot.removeAttribute("title");
+    }
+  });
 }
 
 document.getElementById("nextBtn").addEventListener("click", () => {
@@ -134,6 +235,19 @@ progressDots.forEach((dot) => {
     }
   });
 });
+
+if (lockWeekendButton) {
+  lockWeekendButton.addEventListener("click", () => {
+    const lockedIndex = getLockedWeekendIndex();
+    if (lockedIndex === currentIndex) {
+      clearLockedWeekendIndex();
+    } else {
+      setLockedWeekendIndex(currentIndex);
+    }
+
+    updateLockControls();
+  });
+}
 
 showSection(currentIndex);
 
@@ -616,7 +730,9 @@ function shouldClearStorageKey(key) {
 
   const normalizedKey = String(key).toLowerCase();
   return (
-    normalizedKey.startsWith("weekend") || normalizedKey.startsWith("asset")
+    normalizedKey.startsWith("weekend") ||
+    normalizedKey.startsWith("asset") ||
+    normalizedKey === LOCKED_WEEKEND_STORAGE_KEY_LOWER
   );
 }
 
