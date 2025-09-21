@@ -45,6 +45,26 @@ function parseNumeric(value) {
   return Number.isNaN(parsed) ? 0 : parsed;
 }
 
+function formatCurrencyValue(value) {
+  const numeric = typeof value === "number" ? value : parseNumeric(value);
+  const normalized = Number.isFinite(numeric) ? numeric : 0;
+  return normalized.toLocaleString(undefined, {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2,
+  });
+}
+
+function formatSignedCurrency(value) {
+  const numeric = typeof value === "number" ? value : parseNumeric(value);
+  if (!Number.isFinite(numeric) || numeric === 0) {
+    return "0";
+  }
+
+  const absolute = Math.abs(numeric);
+  const formatted = formatCurrencyValue(absolute);
+  return `${numeric > 0 ? "+" : "-"}${formatted}`;
+}
+
 function getWeekendStorageKey(weekend, day, type) {
   const normalized = String(type || "").toLowerCase();
   const prefix = `Weekend${weekend}_${day}`;
@@ -282,6 +302,311 @@ function calculateWeekend(weekend) {
   });
 
   updateWeekendFinalRemainingDisplay(weekend, runningBalance);
+}
+
+function hasRecordedAmount(data = []) {
+  return data.some((row) => {
+    if (!row) {
+      return false;
+    }
+    const amount = row.amount;
+    if (amount === null || amount === undefined) {
+      return false;
+    }
+    if (typeof amount === "string") {
+      return amount.trim() !== "";
+    }
+    return Number.isFinite(amount);
+  });
+}
+
+function getManualDayValue(weekend, day) {
+  const dayInput = document.querySelector(
+    `input[name="Weekend_${weekend}_${day}"]`
+  );
+  if (dayInput && dayInput.value) {
+    return parseNumeric(dayInput.value);
+  }
+
+  const storedValue = localStorage.getItem(`Weekend_${weekend}_${day}`);
+  if (storedValue) {
+    return parseNumeric(storedValue);
+  }
+
+  return 0;
+}
+
+function getAssetValue(weekend) {
+  const assetInput = document.querySelector(`input[name="asset${weekend}"]`);
+  if (assetInput && assetInput.value) {
+    return parseNumeric(assetInput.value);
+  }
+
+  const storedValue = localStorage.getItem(`asset${weekend}`);
+  if (storedValue) {
+    return parseNumeric(storedValue);
+  }
+
+  return 0;
+}
+
+function collectWeekendStats(weekend) {
+  const startingAsset = getAssetValue(weekend);
+  let totalAdded = 0;
+  let totalPaid = 0;
+  const daySummaries = [];
+
+  weekendDays.forEach((day) => {
+    const addData = loadStoredArray(
+      getWeekendStorageKey(weekend, day, "Add")
+    );
+    const paidData = loadStoredArray(
+      getWeekendStorageKey(weekend, day, "Paid")
+    );
+
+    const added = addData.reduce(
+      (sum, row) => sum + parseNumeric(row?.amount || 0),
+      0
+    );
+
+    const paid = hasRecordedAmount(paidData)
+      ? paidData.reduce(
+          (sum, row) => sum + parseNumeric(row?.amount || 0),
+          0
+        )
+      : getManualDayValue(weekend, day);
+
+    totalAdded += added;
+    totalPaid += paid;
+
+    daySummaries.push({
+      day,
+      added,
+      paid,
+    });
+  });
+
+  const finalRemaining = startingAsset + totalAdded - totalPaid;
+  const netChange = finalRemaining - startingAsset;
+
+  return {
+    weekend,
+    asset: startingAsset,
+    totalAdded,
+    totalPaid,
+    finalRemaining,
+    netChange,
+    daySummaries,
+  };
+}
+
+function createWeekendAnalysisSection(stats) {
+  if (!stats) {
+    return "";
+  }
+
+  const highestSpendingDay = stats.daySummaries.reduce((current, candidate) => {
+    if (!current || candidate.paid > current.paid) {
+      return candidate;
+    }
+    return current;
+  }, null);
+
+  const highestAdditionDay = stats.daySummaries.reduce(
+    (current, candidate) => {
+      if (!current || candidate.added > current.added) {
+        return candidate;
+      }
+      return current;
+    },
+    null
+  );
+
+  const netClass =
+    stats.netChange > 0
+      ? "analysis-net-positive"
+      : stats.netChange < 0
+      ? "analysis-net-negative"
+      : "";
+
+  const highlightMessage = highestSpendingDay && highestSpendingDay.paid > 0
+    ? `Highest spending day: <strong>${highestSpendingDay.day}</strong> (${formatCurrencyValue(
+        highestSpendingDay.paid
+      )})`
+    : "No spending recorded yet.";
+
+  const additionMessage =
+    highestAdditionDay && highestAdditionDay.added > 0
+      ? `Top-up focus: <strong>${highestAdditionDay.day}</strong> (${formatCurrencyValue(
+          highestAdditionDay.added
+        )})`
+      : "";
+
+  const dayRows = stats.daySummaries
+    .map((summary) => {
+      const addedText = formatCurrencyValue(summary.added);
+      const spentText = formatCurrencyValue(summary.paid);
+      return `
+        <div class="analysis-day-row">
+          <span class="analysis-day-name">${summary.day}</span>
+          <span class="analysis-day-added">Added ${addedText}</span>
+          <span class="analysis-day-spent">Spent ${spentText}</span>
+        </div>
+      `.trim();
+    })
+    .join("");
+
+  return `
+    <article class="analysis-weekend-card">
+      <header>
+        <h5 class="mb-0">Weekend ${stats.weekend}</h5>
+        <span class="analysis-weekend-badge">Remaining: ${formatCurrencyValue(
+          stats.finalRemaining
+        )}</span>
+      </header>
+      <div class="analysis-metric-grid">
+        <div>
+          <p class="analysis-metric-label">Starting asset</p>
+          <p class="analysis-metric-value">${formatCurrencyValue(stats.asset)}</p>
+        </div>
+        <div>
+          <p class="analysis-metric-label">Total added</p>
+          <p class="analysis-metric-value analysis-net-positive">${formatSignedCurrency(
+            stats.totalAdded
+          )}</p>
+        </div>
+        <div>
+          <p class="analysis-metric-label">Total spent</p>
+          <p class="analysis-metric-value analysis-net-negative">${formatSignedCurrency(
+            -stats.totalPaid
+          )}</p>
+        </div>
+        <div>
+          <p class="analysis-metric-label">Net change</p>
+          <p class="analysis-metric-value ${netClass}">${formatSignedCurrency(
+            stats.netChange
+          )}</p>
+        </div>
+      </div>
+      <p class="analysis-highlight">${highlightMessage}</p>
+      ${
+        additionMessage
+          ? `<p class="analysis-overview-highlight">${additionMessage}</p>`
+          : ""
+      }
+      <div class="analysis-day-table">
+        ${dayRows}
+      </div>
+    </article>
+  `.trim();
+}
+
+function generateAnalysisMarkup(statsList) {
+  if (!Array.isArray(statsList) || statsList.length === 0) {
+    return '<div class="analysis-empty">No planner data yet. Add transactions to view analysis.</div>';
+  }
+
+  const hasMeaningfulData = statsList.some((stat) => {
+    if (!stat) {
+      return false;
+    }
+    return (
+      Math.abs(stat.asset) > 0 ||
+      Math.abs(stat.totalAdded) > 0 ||
+      Math.abs(stat.totalPaid) > 0
+    );
+  });
+
+  if (!hasMeaningfulData) {
+    return '<div class="analysis-empty">No planner data yet. Add transactions to view analysis.</div>';
+  }
+
+  const totals = statsList.reduce(
+    (acc, stat) => {
+      acc.asset += stat.asset;
+      acc.added += stat.totalAdded;
+      acc.paid += stat.totalPaid;
+      acc.remaining += stat.finalRemaining;
+      return acc;
+    },
+    { asset: 0, added: 0, paid: 0, remaining: 0 }
+  );
+
+  const netChange = totals.remaining - totals.asset;
+  const averageRemaining = totals.remaining / statsList.length;
+
+  const bestWeekend = statsList.reduce((best, stat) => {
+    if (!best || stat.finalRemaining > best.finalRemaining) {
+      return stat;
+    }
+    return best;
+  }, null);
+
+  const heaviestSpendingWeekend = statsList.reduce((worst, stat) => {
+    if (!worst || stat.totalPaid > worst.totalPaid) {
+      return stat;
+    }
+    return worst;
+  }, null);
+
+  const overviewSection = `
+    <section class="analysis-weekend-card">
+      <header>
+        <h5 class="mb-0">Overview</h5>
+        <span class="analysis-weekend-badge">Average remaining: ${formatCurrencyValue(
+          averageRemaining
+        )}</span>
+      </header>
+      <div class="analysis-metric-grid">
+        <div>
+          <p class="analysis-metric-label">Total starting assets</p>
+          <p class="analysis-metric-value">${formatCurrencyValue(totals.asset)}</p>
+        </div>
+        <div>
+          <p class="analysis-metric-label">Total added</p>
+          <p class="analysis-metric-value analysis-net-positive">${formatSignedCurrency(
+            totals.added
+          )}</p>
+        </div>
+        <div>
+          <p class="analysis-metric-label">Total spent</p>
+          <p class="analysis-metric-value analysis-net-negative">${formatSignedCurrency(
+            -totals.paid
+          )}</p>
+        </div>
+        <div>
+          <p class="analysis-metric-label">Net change</p>
+          <p class="analysis-metric-value ${
+            netChange > 0
+              ? "analysis-net-positive"
+              : netChange < 0
+              ? "analysis-net-negative"
+              : ""
+          }">${formatSignedCurrency(netChange)}</p>
+        </div>
+      </div>
+      ${
+        bestWeekend
+          ? `<p class="analysis-overview-highlight">Highest remaining: Weekend ${
+              bestWeekend.weekend
+            } (${formatCurrencyValue(bestWeekend.finalRemaining)})</p>`
+          : ""
+      }
+      ${
+        heaviestSpendingWeekend
+          ? `<p class="analysis-overview-highlight">Highest spending: Weekend ${
+              heaviestSpendingWeekend.weekend
+            } (${formatCurrencyValue(heaviestSpendingWeekend.totalPaid)})</p>`
+          : ""
+      }
+    </section>
+  `.trim();
+
+  const weekendSections = statsList
+    .map((stats) => createWeekendAnalysisSection(stats))
+    .join("");
+
+  return `${overviewSection}${weekendSections}`;
 }
 
 function shouldClearStorageKey(key) {
@@ -750,4 +1075,63 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   resetButton.addEventListener("click", resetPlanner);
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+  const analysisButton = document.getElementById("analysisButton");
+  const analysisModalEl = document.getElementById("analysisModal");
+  const analysisContentEl = document.getElementById("analysisContent");
+  let analysisModalInstance = null;
+
+  function resolveAnalysisModal() {
+    if (!analysisModalEl) {
+      return null;
+    }
+
+    if (analysisModalInstance) {
+      return analysisModalInstance;
+    }
+
+    if (window.bootstrap && typeof window.bootstrap.Modal === "function") {
+      analysisModalInstance = new bootstrap.Modal(analysisModalEl);
+      return analysisModalInstance;
+    }
+
+    return null;
+  }
+
+  function showWeeklyAnalysis() {
+    const statsList = weekendNumbers.map((weekend) =>
+      collectWeekendStats(weekend)
+    );
+
+    if (analysisContentEl) {
+      analysisContentEl.innerHTML = generateAnalysisMarkup(statsList);
+    }
+
+    const modalInstance = resolveAnalysisModal();
+    if (modalInstance) {
+      modalInstance.show();
+      return;
+    }
+
+    const plainTextSummary = statsList
+      .map((stat) =>
+        `Weekend ${stat.weekend}: Remaining ${formatCurrencyValue(
+          stat.finalRemaining
+        )} | Added ${formatCurrencyValue(stat.totalAdded)} | Spent ${formatCurrencyValue(
+          stat.totalPaid
+        )}`
+      )
+      .join("\n");
+
+    window.alert(
+      plainTextSummary ||
+        "No planner data yet. Add transactions to view analysis."
+    );
+  }
+
+  if (analysisButton) {
+    analysisButton.addEventListener("click", showWeeklyAnalysis);
+  }
 });

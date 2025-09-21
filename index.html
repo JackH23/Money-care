@@ -81,13 +81,22 @@
               <span class="dot-label">Weekend 4</span>
             </button>
           </div>
-          <button
-            type="button"
-            id="resetPlannerButton"
-            class="btn btn-outline-danger reset-planner-btn"
-          >
-            Reset planner
-          </button>
+          <div class="planner-action-buttons d-flex flex-column flex-sm-row gap-2">
+            <button
+              type="button"
+              id="resetPlannerButton"
+              class="btn btn-outline-danger reset-planner-btn"
+            >
+              Reset planner
+            </button>
+            <button
+              type="button"
+              id="analysisButton"
+              class="btn btn-outline-primary analysis-btn"
+            >
+              Analysis
+            </button>
+          </div>
         </div>
 
         <div
@@ -372,6 +381,28 @@
                     </div>
                   </div>
                 </div>
+                <div class="modal-footer border-0 pt-0">
+                  <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="modal fade" id="analysisModal" tabindex="-1" aria-labelledby="analysisModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+              <div class="modal-content analysis-modal">
+                <div class="modal-header border-0">
+                  <div>
+                    <p class="modal-eyebrow text-uppercase text-muted mb-1">Weekly insights</p>
+                    <h5 class="modal-title" id="analysisModalLabel">Planner Analysis</h5>
+                  </div>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body pt-0">
+                  <div id="analysisContent" class="analysis-content"></div>
+                </div>
+
                 <div class="modal-footer border-0 pt-0">
                   <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
                 </div>
