@@ -193,22 +193,57 @@ function updateWeekendDayTotals(weekend, day, startingBalance = null) {
   const paidData = loadStoredArray(getWeekendStorageKey(weekend, day, "Paid"));
   const addData = loadStoredArray(getWeekendStorageKey(weekend, day, "Add"));
 
-  const paidTotal = paidData.reduce(
-    (sum, row) => sum + parseNumeric(row?.amount || 0),
-    0
+  const totalInput = document.querySelector(
+    `input[name="Weekend_${weekend}_${day}"]`
   );
+
+  const hasPaidRows = paidData.some((row) => {
+    if (!row) {
+      return false;
+    }
+    const amount = row.amount;
+    if (amount === null || amount === undefined) {
+      return false;
+    }
+    if (typeof amount === "string") {
+      return amount.trim() !== "";
+    }
+    return true;
+  });
+
+  let manualFallback = totalInput?.value || "";
+  if (!manualFallback) {
+    const storedManual = localStorage.getItem(`Weekend_${weekend}_${day}`);
+    if (storedManual) {
+      manualFallback = storedManual;
+      if (totalInput && totalInput.value !== storedManual) {
+        totalInput.value = storedManual;
+      }
+    }
+  }
+
+  let paidTotal = 0;
+  if (hasPaidRows) {
+    paidTotal = paidData.reduce(
+      (sum, row) => sum + parseNumeric(row?.amount || 0),
+      0
+    );
+    if (totalInput) {
+      const formattedPaidTotal = paidTotal.toLocaleString();
+      totalInput.value = formattedPaidTotal;
+      localStorage.setItem(
+        `Weekend_${weekend}_${day}`,
+        formattedPaidTotal
+      );
+    }
+  } else {
+    paidTotal = parseNumeric(manualFallback);
+  }
+
   const addTotal = addData.reduce(
     (sum, row) => sum + parseNumeric(row?.amount || 0),
     0
   );
-
-  const totalInput = document.querySelector(
-    `input[name="Weekend_${weekend}_${day}"]`
-  );
-  if (totalInput) {
-    totalInput.value = paidTotal.toLocaleString();
-    localStorage.setItem(`Weekend_${weekend}_${day}`, totalInput.value);
-  }
 
   const assetInput = document.querySelector(`input[name="asset${weekend}"]`);
   const assetVal = parseNumeric(assetInput?.value || "0");
