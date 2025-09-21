@@ -81,6 +81,21 @@ body.app-body {
   align-self: flex-start;
 }
 
+.planner-action-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: flex-end;
+}
+
+.analysis-btn {
+  font-weight: 600;
+  border-radius: 999px;
+  padding: 0.5rem 1.25rem;
+  white-space: nowrap;
+  align-self: flex-start;
+}
+
 .reset-feedback {
   box-shadow: 0 12px 24px rgba(59, 91, 219, 0.15);
   border-radius: 999px;
@@ -383,6 +398,132 @@ body.app-body {
 .current-datetime {
   font-size: 0.75rem;
   letter-spacing: 0.08em;
+}
+
+.analysis-modal {
+  border-radius: 24px;
+  border: none;
+  box-shadow: var(--shadow-soft);
+}
+
+.analysis-modal .modal-body {
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.analysis-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.analysis-empty {
+  text-align: center;
+  padding: 2rem 1rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.analysis-weekend-card {
+  background: var(--surface);
+  border: 1px solid rgba(148, 163, 184, 0.22);
+  border-radius: 20px;
+  padding: 1.75rem;
+  box-shadow: 0 22px 44px rgba(15, 23, 42, 0.14);
+}
+
+.analysis-weekend-card header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.analysis-metric-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1.1rem;
+  margin-top: 1.25rem;
+}
+
+.analysis-metric-label {
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  color: var(--text-muted);
+  margin-bottom: 0.35rem;
+}
+
+.analysis-metric-value {
+  font-size: 1.15rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.analysis-highlight {
+  margin-top: 1.25rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--primary-strong);
+}
+
+.analysis-overview-highlight {
+  margin-top: 0.75rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.analysis-day-table {
+  margin-top: 1.25rem;
+  border-top: 1px solid rgba(148, 163, 184, 0.24);
+}
+
+.analysis-day-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
+  gap: 0.75rem;
+  padding: 0.85rem 0;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.16);
+  font-size: 0.9rem;
+}
+
+.analysis-day-row:last-child {
+  border-bottom: none;
+}
+
+.analysis-day-name {
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.analysis-day-added {
+  color: var(--success);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.analysis-day-spent {
+  color: #d6336c;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.analysis-net-positive {
+  color: var(--success);
+}
+
+.analysis-net-negative {
+  color: #d6336c;
+}
+
+.analysis-weekend-badge {
+  background: rgba(59, 91, 219, 0.08);
+  color: var(--primary-strong);
+  border-radius: 999px;
+  padding: 0.35rem 0.85rem;
+  font-weight: 600;
 }
 
 @media (max-width: 991.98px) {
