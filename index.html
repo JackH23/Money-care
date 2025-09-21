@@ -17,16 +17,114 @@
   />
 </head>
 <body class="app-body">
-  <div class="app-shell">
-    <header class="page-hero text-center">
-      <span class="badge hero-badge text-uppercase">Money Care</span>
-      <h1 class="hero-title display-5 fw-bold">Money Care Planner</h1>
-      <p class="hero-lead lead text-muted mb-0">
-        Set your weekend budgets, log your cash flow, and watch the balance update in real time.
-      </p>
-    </header>
+    <div class="app-shell">
+      <header class="page-hero text-center">
+        <span class="badge hero-badge text-uppercase">Money Care</span>
+        <h1 class="hero-title display-5 fw-bold">Money Care Planner</h1>
+        <p class="hero-lead lead text-muted mb-0">
+          Set your weekend budgets, log your cash flow, and watch the balance update in real time.
+        </p>
+        <div
+          class="hero-actions d-flex flex-column flex-sm-row align-items-center justify-content-center gap-3 mt-4"
+        >
+          <a class="btn hero-cta" href="#weekend-sections">Start planning</a>
+          <div class="hero-note text-muted">
+            <span class="hero-note-icon" aria-hidden="true">✓</span>
+            No sign-in required &mdash; your data stays on this device.
+          </div>
+        </div>
+      </header>
 
-    <main class="container mt-4">
+      <section class="planner-overview container" aria-label="Planner highlights">
+        <div class="row g-4">
+          <div class="col-md-4">
+            <article class="overview-card h-100">
+              <span class="overview-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" role="img">
+                  <path
+                    d="M4 16l5-5 4 4 7-7"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                  />
+                  <path
+                    d="M16 6h4v4"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                  />
+                </svg>
+              </span>
+              <h3 class="overview-title">Plan with clarity</h3>
+              <p class="overview-copy">
+                Set weekend goals and keep your running balance visible at the top of every schedule.
+              </p>
+            </article>
+          </div>
+          <div class="col-md-4">
+            <article class="overview-card h-100">
+              <span class="overview-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" role="img">
+                  <rect
+                    x="3"
+                    y="5"
+                    width="18"
+                    height="16"
+                    rx="2"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  />
+                  <path
+                    d="M8 3v4M16 3v4M3 11h18"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-width="2"
+                  />
+                </svg>
+              </span>
+              <h3 class="overview-title">Daily check-ins</h3>
+              <p class="overview-copy">
+                Break down income and spending for every day of the week to spot patterns instantly.
+              </p>
+            </article>
+          </div>
+          <div class="col-md-4">
+            <article class="overview-card h-100">
+              <span class="overview-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" role="img">
+                  <path
+                    d="M4 14l4-4 3 3 5-5 4 4"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                  />
+                  <path
+                    d="M4 18h16"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-width="2"
+                  />
+                </svg>
+              </span>
+              <h3 class="overview-title">Instant insights</h3>
+              <p class="overview-copy">
+                Use the analysis modal to compare weekends, track savings, and celebrate progress.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <main class="container mt-5 mt-md-4">
       <div class="slideshow-wrapper">
         <div
           class="weekend-navigation d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3"
@@ -136,7 +234,7 @@
                 <div class="weekend-header-sticky bg-white rounded-4 shadow-sm p-3 p-md-4 mb-4">
                   <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-2">
                     <h1 class="number-center mb-0 text-center text-md-start">Weekend 1</h1>
-                    <p id="Weekend1_Final_Remaining" class="fw-bold text-success mb-0">Remaining: 0</p>
+                    <p id="Weekend1_Final_Remaining" class="balance-chip">Remaining: 0</p>
                   </div>
                   <div class="asset d-flex flex-column flex-md-row align-items-md-center gap-2 mt-3">
                     <label class="mb-0 text-uppercase text-muted asset-label" style="width: auto;">Your asset</label>
@@ -151,13 +249,14 @@
                   </div>
                 </div>
 
-                <p class="number-center text-muted text-center mb-4">
-                  Please fill in this form to manage your asset.
+                <p class="weekend-helper text-center mb-4">
+                  Log your additions and spending below. Tap a day to open detailed transactions.
                 </p>
                 <div class="soft-divider mb-4"></div>
 
-                <!-- Monday -->
-                <div class="mb-4 day-block">
+                <div class="weekend-content">
+                  <!-- Monday -->
+                  <div class="day-block">
                   <div class="day-header">
                     <label class="form-label mb-0"><b>Monday</b></label>
                     <button
@@ -181,13 +280,13 @@
                       />
                     </div>
                     <div class="col-12">
-                      <p id="Monday_1_addTotal" class="fw-bold text-success">Remaining: 0</p>
+                      <p id="Monday_1_addTotal" class="day-remaining">Remaining: 0</p>
                     </div>
                   </div>
                 </div>
 
                 <!-- Tuesday -->
-                <div class="mb-4 day-block">
+                <div class="day-block">
                   <div class="day-header">
                     <label class="form-label mb-0"><b>Tuesday</b></label>
                     <button
@@ -210,13 +309,13 @@
                       />
                     </div>
                     <div class="col-12">
-                      <p id="Tuesday_1_addTotal" class="fw-bold text-success">Remaining: 0</p>
+                      <p id="Tuesday_1_addTotal" class="day-remaining">Remaining: 0</p>
                     </div>
                   </div>
                 </div>
 
                 <!-- Wednesday -->
-                <div class="mb-4 day-block">
+                <div class="day-block">
                   <div class="day-header">
                     <label class="form-label mb-0"><b>Wednesday</b></label>
                     <button
@@ -239,13 +338,13 @@
                       />
                     </div>
                     <div class="col-12">
-                      <p id="Wednesday_1_addTotal" class="fw-bold text-success">Remaining: 0</p>
+                      <p id="Wednesday_1_addTotal" class="day-remaining">Remaining: 0</p>
                     </div>
                   </div>
                 </div>
 
                 <!-- Thursday -->
-                <div class="mb-4 day-block">
+                <div class="day-block">
                   <div class="day-header">
                     <label class="form-label mb-0"><b>Thursday</b></label>
                     <button
@@ -268,13 +367,13 @@
                       />
                     </div>
                     <div class="col-12">
-                      <p id="Thursday_1_addTotal" class="fw-bold text-success">Remaining: 0</p>
+                      <p id="Thursday_1_addTotal" class="day-remaining">Remaining: 0</p>
                     </div>
                   </div>
                 </div>
 
                 <!-- Friday -->
-                <div class="mb-4 day-block">
+                <div class="day-block">
                   <div class="day-header">
                     <label class="form-label mb-0"><b>Friday</b></label>
                     <button
@@ -297,13 +396,13 @@
                       />
                     </div>
                     <div class="col-12">
-                      <p id="Friday_1_addTotal" class="fw-bold text-success">Remaining: 0</p>
+                      <p id="Friday_1_addTotal" class="day-remaining">Remaining: 0</p>
                     </div>
                   </div>
                 </div>
 
                 <!-- Saturday -->
-                <div class="mb-4 day-block">
+                <div class="day-block">
                   <div class="day-header">
                     <label class="form-label mb-0"><b>Saturday</b></label>
                     <button
@@ -326,13 +425,13 @@
                       />
                     </div>
                     <div class="col-12">
-                      <p id="Saturday_1_addTotal" class="fw-bold text-success">Remaining: 0</p>
+                      <p id="Saturday_1_addTotal" class="day-remaining">Remaining: 0</p>
                     </div>
                   </div>
                 </div>
 
                 <!-- Sunday -->
-                <div class="mb-3 day-block">
+                <div class="day-block">
                   <div class="day-header">
                     <label class="form-label mb-0"><b>Sunday</b></label>
                     <button
@@ -355,9 +454,11 @@
                       />
                     </div>
                     <div class="col-12">
-                      <p id="Sunday_1_addTotal" class="fw-bold text-success">Remaining: 0</p>
+                      <p id="Sunday_1_addTotal" class="day-remaining">Remaining: 0</p>
                     </div>
                   </div>
+                </div>
+
                 </div>
 
                 <div class="soft-divider mt-4"></div>
@@ -430,7 +531,7 @@
                 <div class="weekend-header-sticky bg-white rounded-4 shadow-sm p-3 p-md-4 mb-4">
                   <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-2">
                     <h1 class="number-center mb-0 text-center text-md-start">Weekend 2</h1>
-                    <p id="Weekend2_Final_Remaining" class="fw-bold text-success mb-0">Remaining: 0</p>
+                    <p id="Weekend2_Final_Remaining" class="balance-chip">Remaining: 0</p>
                   </div>
                   <div class="asset d-flex flex-column flex-md-row align-items-md-center gap-2 mt-3">
                     <label class="mb-0 text-uppercase text-muted asset-label" style="width: auto;">Your asset</label>
@@ -445,13 +546,14 @@
                   </div>
                 </div>
 
-                <p class="number-center text-muted text-center mb-4">
-                  Please fill in this form to manage your asset.
+                <p class="weekend-helper text-center mb-4">
+                  Log your additions and spending below. Tap a day to open detailed transactions.
                 </p>
                 <div class="soft-divider mb-4"></div>
 
-                <!-- Monday -->
-                <div class="mb-4 day-block">
+                <div class="weekend-content">
+                  <!-- Monday -->
+                  <div class="day-block">
                   <div class="day-header">
                     <label class="form-label mb-0"><b>Monday</b></label>
                     <button
@@ -475,13 +577,13 @@
                       />
                     </div>
                     <div class="col-12">
-                      <p id="Monday_2_addTotal" class="fw-bold text-success">Remaining: 0</p>
+                      <p id="Monday_2_addTotal" class="day-remaining">Remaining: 0</p>
                     </div>
                   </div>
                 </div>
 
                 <!-- Tuesday -->
-                <div class="mb-4 day-block">
+                <div class="day-block">
                   <div class="day-header">
                     <label class="form-label mb-0"><b>Tuesday</b></label>
                     <button
@@ -504,13 +606,13 @@
                       />
                     </div>
                     <div class="col-12">
-                      <p id="Tuesday_2_addTotal" class="fw-bold text-success">Remaining: 0</p>
+                      <p id="Tuesday_2_addTotal" class="day-remaining">Remaining: 0</p>
                     </div>
                   </div>
                 </div>
 
                 <!-- Wednesday -->
-                <div class="mb-4 day-block">
+                <div class="day-block">
                   <div class="day-header">
                     <label class="form-label mb-0"><b>Wednesday</b></label>
                     <button
@@ -533,13 +635,13 @@
                       />
                     </div>
                     <div class="col-12">
-                      <p id="Wednesday_2_addTotal" class="fw-bold text-success">Remaining: 0</p>
+                      <p id="Wednesday_2_addTotal" class="day-remaining">Remaining: 0</p>
                     </div>
                   </div>
                 </div>
 
                 <!-- Thursday -->
-                <div class="mb-4 day-block">
+                <div class="day-block">
                   <div class="day-header">
                     <label class="form-label mb-0"><b>Thursday</b></label>
                     <button
@@ -562,13 +664,13 @@
                       />
                     </div>
                     <div class="col-12">
-                      <p id="Thursday_2_addTotal" class="fw-bold text-success">Remaining: 0</p>
+                      <p id="Thursday_2_addTotal" class="day-remaining">Remaining: 0</p>
                     </div>
                   </div>
                 </div>
 
                 <!-- Friday -->
-                <div class="mb-4 day-block">
+                <div class="day-block">
                   <div class="day-header">
                     <label class="form-label mb-0"><b>Friday</b></label>
                     <button
@@ -591,13 +693,13 @@
                       />
                     </div>
                     <div class="col-12">
-                      <p id="Friday_2_addTotal" class="fw-bold text-success">Remaining: 0</p>
+                      <p id="Friday_2_addTotal" class="day-remaining">Remaining: 0</p>
                     </div>
                   </div>
                 </div>
 
                 <!-- Saturday -->
-                <div class="mb-4 day-block">
+                <div class="day-block">
                   <div class="day-header">
                     <label class="form-label mb-0"><b>Saturday</b></label>
                     <button
@@ -620,13 +722,13 @@
                       />
                     </div>
                     <div class="col-12">
-                      <p id="Saturday_2_addTotal" class="fw-bold text-success">Remaining: 0</p>
+                      <p id="Saturday_2_addTotal" class="day-remaining">Remaining: 0</p>
                     </div>
                   </div>
                 </div>
 
                 <!-- Sunday -->
-                <div class="mb-3 day-block">
+                <div class="day-block">
                   <div class="day-header">
                     <label class="form-label mb-0"><b>Sunday</b></label>
                     <button
@@ -649,9 +751,11 @@
                       />
                     </div>
                     <div class="col-12">
-                      <p id="Sunday_2_addTotal" class="fw-bold text-success">Remaining: 0</p>
+                      <p id="Sunday_2_addTotal" class="day-remaining">Remaining: 0</p>
                     </div>
                   </div>
+                </div>
+
                 </div>
 
                 <div class="soft-divider mt-4"></div>
@@ -666,7 +770,7 @@
                 <div class="weekend-header-sticky bg-white rounded-4 shadow-sm p-3 p-md-4 mb-4">
                   <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-2">
                     <h1 class="number-center mb-0 text-center text-md-start">Weekend 3</h1>
-                    <p id="Weekend3_Final_Remaining" class="fw-bold text-success mb-0">Remaining: 0</p>
+                    <p id="Weekend3_Final_Remaining" class="balance-chip">Remaining: 0</p>
                   </div>
                   <div class="asset d-flex flex-column flex-md-row align-items-md-center gap-2 mt-3">
                     <label class="mb-0 text-uppercase text-muted asset-label" style="width: auto;">Your asset</label>
@@ -681,13 +785,14 @@
                   </div>
                 </div>
 
-                <p class="number-center text-muted text-center mb-4">
-                  Please fill in this form to manage your asset.
+                <p class="weekend-helper text-center mb-4">
+                  Log your additions and spending below. Tap a day to open detailed transactions.
                 </p>
                 <div class="soft-divider mb-4"></div>
 
-                <!-- Monday -->
-                <div class="mb-4 day-block">
+                <div class="weekend-content">
+                  <!-- Monday -->
+                  <div class="day-block">
                   <div class="day-header">
                     <label class="form-label mb-0"><b>Monday</b></label>
                     <button
@@ -711,13 +816,13 @@
                       />
                     </div>
                     <div class="col-12">
-                      <p id="Monday_3_addTotal" class="fw-bold text-success">Remaining: 0</p>
+                      <p id="Monday_3_addTotal" class="day-remaining">Remaining: 0</p>
                     </div>
                   </div>
                 </div>
 
                 <!-- Tuesday -->
-                <div class="mb-4 day-block">
+                <div class="day-block">
                   <div class="day-header">
                     <label class="form-label mb-0"><b>Tuesday</b></label>
                     <button
@@ -740,13 +845,13 @@
                       />
                     </div>
                     <div class="col-12">
-                      <p id="Tuesday_3_addTotal" class="fw-bold text-success">Remaining: 0</p>
+                      <p id="Tuesday_3_addTotal" class="day-remaining">Remaining: 0</p>
                     </div>
                   </div>
                 </div>
 
                 <!-- Wednesday -->
-                <div class="mb-4 day-block">
+                <div class="day-block">
                   <div class="day-header">
                     <label class="form-label mb-0"><b>Wednesday</b></label>
                     <button
@@ -769,13 +874,13 @@
                       />
                     </div>
                     <div class="col-12">
-                      <p id="Wednesday_3_addTotal" class="fw-bold text-success">Remaining: 0</p>
+                      <p id="Wednesday_3_addTotal" class="day-remaining">Remaining: 0</p>
                     </div>
                   </div>
                 </div>
 
                 <!-- Thursday -->
-                <div class="mb-4 day-block">
+                <div class="day-block">
                   <div class="day-header">
                     <label class="form-label mb-0"><b>Thursday</b></label>
                     <button
@@ -798,13 +903,13 @@
                       />
                     </div>
                     <div class="col-12">
-                      <p id="Thursday_3_addTotal" class="fw-bold text-success">Remaining: 0</p>
+                      <p id="Thursday_3_addTotal" class="day-remaining">Remaining: 0</p>
                     </div>
                   </div>
                 </div>
 
                 <!-- Friday -->
-                <div class="mb-4 day-block">
+                <div class="day-block">
                   <div class="day-header">
                     <label class="form-label mb-0"><b>Friday</b></label>
                     <button
@@ -827,13 +932,13 @@
                       />
                     </div>
                     <div class="col-12">
-                      <p id="Friday_3_addTotal" class="fw-bold text-success">Remaining: 0</p>
+                      <p id="Friday_3_addTotal" class="day-remaining">Remaining: 0</p>
                     </div>
                   </div>
                 </div>
 
                 <!-- Saturday -->
-                <div class="mb-4 day-block">
+                <div class="day-block">
                   <div class="day-header">
                     <label class="form-label mb-0"><b>Saturday</b></label>
                     <button
@@ -856,13 +961,13 @@
                       />
                     </div>
                     <div class="col-12">
-                      <p id="Saturday_3_addTotal" class="fw-bold text-success">Remaining: 0</p>
+                      <p id="Saturday_3_addTotal" class="day-remaining">Remaining: 0</p>
                     </div>
                   </div>
                 </div>
 
                 <!-- Sunday -->
-                <div class="mb-3 day-block">
+                <div class="day-block">
                   <div class="day-header">
                     <label class="form-label mb-0"><b>Sunday</b></label>
                     <button
@@ -885,9 +990,11 @@
                       />
                     </div>
                     <div class="col-12">
-                      <p id="Sunday_3_addTotal" class="fw-bold text-success">Remaining: 0</p>
+                      <p id="Sunday_3_addTotal" class="day-remaining">Remaining: 0</p>
                     </div>
                   </div>
+                </div>
+
                 </div>
 
                 <div class="soft-divider mt-4"></div>
@@ -902,7 +1009,7 @@
                 <div class="weekend-header-sticky bg-white rounded-4 shadow-sm p-3 p-md-4 mb-4">
                   <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-2">
                     <h1 class="number-center mb-0 text-center text-md-start">Weekend 4</h1>
-                    <p id="Weekend4_Final_Remaining" class="fw-bold text-success mb-0">Remaining: 0</p>
+                    <p id="Weekend4_Final_Remaining" class="balance-chip">Remaining: 0</p>
                   </div>
                   <div class="asset d-flex flex-column flex-md-row align-items-md-center gap-2 mt-3">
                     <label class="mb-0 text-uppercase text-muted asset-label" style="width: auto;">Your asset</label>
@@ -917,13 +1024,14 @@
                   </div>
                 </div>
 
-                <p class="number-center text-muted text-center mb-4">
-                  Please fill in this form to manage your asset.
+                <p class="weekend-helper text-center mb-4">
+                  Log your additions and spending below. Tap a day to open detailed transactions.
                 </p>
                 <div class="soft-divider mb-4"></div>
 
-                <!-- Monday -->
-                <div class="mb-4 day-block">
+                <div class="weekend-content">
+                  <!-- Monday -->
+                  <div class="day-block">
                   <div class="day-header">
                     <label class="form-label mb-0"><b>Monday</b></label>
                     <button
@@ -947,13 +1055,13 @@
                       />
                     </div>
                     <div class="col-12">
-                      <p id="Monday_4_addTotal" class="fw-bold text-success">Remaining: 0</p>
+                      <p id="Monday_4_addTotal" class="day-remaining">Remaining: 0</p>
                     </div>
                   </div>
                 </div>
 
                 <!-- Tuesday -->
-                <div class="mb-4 day-block">
+                <div class="day-block">
                   <div class="day-header">
                     <label class="form-label mb-0"><b>Tuesday</b></label>
                     <button
@@ -976,13 +1084,13 @@
                       />
                     </div>
                     <div class="col-12">
-                      <p id="Tuesday_4_addTotal" class="fw-bold text-success">Remaining: 0</p>
+                      <p id="Tuesday_4_addTotal" class="day-remaining">Remaining: 0</p>
                     </div>
                   </div>
                 </div>
 
                 <!-- Wednesday -->
-                <div class="mb-4 day-block">
+                <div class="day-block">
                   <div class="day-header">
                     <label class="form-label mb-0"><b>Wednesday</b></label>
                     <button
@@ -1005,13 +1113,13 @@
                       />
                     </div>
                     <div class="col-12">
-                      <p id="Wednesday_4_addTotal" class="fw-bold text-success">Remaining: 0</p>
+                      <p id="Wednesday_4_addTotal" class="day-remaining">Remaining: 0</p>
                     </div>
                   </div>
                 </div>
 
                 <!-- Thursday -->
-                <div class="mb-4 day-block">
+                <div class="day-block">
                   <div class="day-header">
                     <label class="form-label mb-0"><b>Thursday</b></label>
                     <button
@@ -1034,13 +1142,13 @@
                       />
                     </div>
                     <div class="col-12">
-                      <p id="Thursday_4_addTotal" class="fw-bold text-success">Remaining: 0</p>
+                      <p id="Thursday_4_addTotal" class="day-remaining">Remaining: 0</p>
                     </div>
                   </div>
                 </div>
 
                 <!-- Friday -->
-                <div class="mb-4 day-block">
+                <div class="day-block">
                   <div class="day-header">
                     <label class="form-label mb-0"><b>Friday</b></label>
                     <button
@@ -1063,13 +1171,13 @@
                       />
                     </div>
                     <div class="col-12">
-                      <p id="Friday_4_addTotal" class="fw-bold text-success">Remaining: 0</p>
+                      <p id="Friday_4_addTotal" class="day-remaining">Remaining: 0</p>
                     </div>
                   </div>
                 </div>
 
                 <!-- Saturday -->
-                <div class="mb-4 day-block">
+                <div class="day-block">
                   <div class="day-header">
                     <label class="form-label mb-0"><b>Saturday</b></label>
                     <button
@@ -1092,13 +1200,13 @@
                       />
                     </div>
                     <div class="col-12">
-                      <p id="Saturday_4_addTotal" class="fw-bold text-success">Remaining: 0</p>
+                      <p id="Saturday_4_addTotal" class="day-remaining">Remaining: 0</p>
                     </div>
                   </div>
                 </div>
 
                 <!-- Sunday -->
-                <div class="mb-3 day-block">
+                <div class="day-block">
                   <div class="day-header">
                     <label class="form-label mb-0"><b>Sunday</b></label>
                     <button
@@ -1121,9 +1229,11 @@
                       />
                     </div>
                     <div class="col-12">
-                      <p id="Sunday_4_addTotal" class="fw-bold text-success">Remaining: 0</p>
+                      <p id="Sunday_4_addTotal" class="day-remaining">Remaining: 0</p>
                     </div>
                   </div>
+                </div>
+
                 </div>
 
                 <div class="soft-divider mt-4"></div>
