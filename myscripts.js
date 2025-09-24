@@ -1037,6 +1037,7 @@ document.addEventListener("DOMContentLoaded", function () {
     container.dataset.placeholder = detailPlaceholder;
     container.dataset.day = day;
     container.dataset.weekend = String(weekend);
+    container.dataset.type = type;
     const data = loadStoredArray(storageKey);
     container.innerHTML = "";
     if (data.length === 0) {
@@ -1059,6 +1060,44 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     }
     ensureFirstRowSuppressed(container);
+  }
+
+  function clearDaySummary(weekend, day) {
+    const dayInput = document.querySelector(
+      `input[name="Weekend_${weekend}_${day}"]`
+    );
+
+    if (dayInput) {
+      dayInput.value = "";
+    }
+
+    try {
+      localStorage.removeItem(`Weekend_${weekend}_${day}`);
+    } catch (err) {
+      /* ignore storage errors */
+    }
+  }
+
+  function clearPaidTransactions(weekend, day) {
+    try {
+      localStorage.removeItem(getWeekendStorageKey(weekend, day, "Paid"));
+    } catch (err) {
+      /* ignore storage errors */
+    }
+
+    if (
+      paidContainer &&
+      paidContainer.dataset.weekend === String(weekend) &&
+      paidContainer.dataset.day === day
+    ) {
+      renderContainer(
+        paidContainer,
+        weekend,
+        day,
+        "Paid",
+        detailPlaceholders.Paid
+      );
+    }
   }
 
   function saveDataFromContainer(container) {
@@ -1093,11 +1132,46 @@ document.addEventListener("DOMContentLoaded", function () {
       data.push({ timestamp, detail, amount, suppressTimestamp });
     });
 
-    localStorage.setItem(storageKey, JSON.stringify(data));
+    const hasAmountValue = data.some((row) => {
+      const amount = row?.amount;
+      if (typeof amount === "number") {
+        return !Number.isNaN(amount);
+      }
+      if (typeof amount === "string") {
+        return amount.trim() !== "";
+      }
+      return false;
+    });
+
+    const hasContent = data.some((row) => {
+      const detail = row?.detail;
+      const amount = row?.amount;
+      const hasDetail =
+        typeof detail === "string" ? detail.trim() !== "" : !!detail;
+      const hasAmount =
+        typeof amount === "string"
+          ? amount.trim() !== ""
+          : typeof amount === "number" && !Number.isNaN(amount);
+      return hasDetail || hasAmount;
+    });
+
+    if (hasContent) {
+      localStorage.setItem(storageKey, JSON.stringify(data));
+    } else {
+      try {
+        localStorage.removeItem(storageKey);
+      } catch (err) {
+        /* ignore storage errors */
+      }
+    }
 
     const day = container.dataset.day;
     const weekend = Number.parseInt(container.dataset.weekend, 10);
+    const containerType = container.dataset.type;
     if (day && Number.isFinite(weekend)) {
+      if (containerType === "Paid" && !hasAmountValue) {
+        clearDaySummary(weekend, day);
+      }
       calculateWeekend(weekend);
     }
   }
@@ -1134,6 +1208,37 @@ document.addEventListener("DOMContentLoaded", function () {
     .forEach((container) => {
       container.addEventListener("click", handleContainerClick);
       container.addEventListener("input", handleContainerInput);
+    });
+
+  document
+    .querySelectorAll('input[name^="Weekend_"]')
+    .forEach((dayInput) => {
+      dayInput.addEventListener("input", () => {
+        if (dayInput.value.trim() !== "") {
+          return;
+        }
+
+        const match = dayInput.name.match(/^Weekend_(\d+)_(.+)$/);
+        if (!match) {
+          return;
+        }
+
+        const weekend = Number.parseInt(match[1], 10);
+        const day = match[2];
+        if (Number.isNaN(weekend) || !day) {
+          return;
+        }
+
+        try {
+          localStorage.removeItem(dayInput.name);
+        } catch (err) {
+          /* ignore storage errors */
+        }
+
+        clearPaidTransactions(weekend, day);
+        clearDaySummary(weekend, day);
+        calculateWeekend(weekend);
+      });
     });
 
   dayButtons.forEach((btn) => {
